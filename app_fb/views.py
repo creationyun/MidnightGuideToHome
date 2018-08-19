@@ -8,15 +8,14 @@ import pprint
 import requests
 import datetime
 from lib import *
+from .models import FacebookDHCPService
+from django.core.exceptions import ObjectDoesNotExist
 # tokens.py는 보안상 github에 업로드하지 않았다.
 from tokens import PAGE_ACCESS_TOKEN, VERIFY_TOKEN
 
 #### 데이터베이스 Databases ####
-# dhcp_service: 사용자 이름(token)에 따라 5호선-4호선 환승방법 안내의 Input message와 메뉴
-#   선택의 message를 구별함. Dictionary의 형태는 "사용자아이디번호":Boolean 형태이다.
 # MenuBtn: 메뉴 버튼 Dictionary 데이터
 #
-dhcp_service = {}
 
 # 1번 메뉴 payload: report
 # 2번 메뉴 payload: gohome
@@ -179,7 +178,9 @@ It is not midnight or late-night time yet.'''
 
     ###### 동대문역사문화공원역 5호선-4호선 환승방법 안내 실행 ######
     if payload == 'dhcp_transfer':
-        dhcp_service[fbid] = True  # 요청 상태: On
+        cur_dhcp = FacebookDHCPService.objects.get(fbid=fbid)
+        cur_dhcp.status = True  # 요청 상태: On
+        cur_dhcp.save()  # 데이터베이스 반영
         post_facebook_message(fbid, {
             'messaging_type': 'RESPONSE',
             'recipient':{'id':''},
@@ -236,22 +237,29 @@ class BotView(generic.View):
         incoming_message = json.loads(self.request.body.decode('utf-8'))
         for entry in incoming_message['entry']:
             for message in entry['messaging']:
+                # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 불러온다.
+                try:
+                    cur_dhcp = FacebookDHCPService.objects.get(
+                        fbid=message['sender']['id']
+                    )
+                except ObjectDoesNotExist:
+                    cur_dhcp = FacebookDHCPService.objects.create(
+                        fbid=message['sender']['id'], status=False
+                    )
+                    cur_dhcp.save()  # 데이터베이스 반영
+
                 # 일반적인 사용자의 message 양식
                 if 'message' in message:
                     print('message: ' + str(message))  # 디버그용
-
-                    # 사용자 코드가 dhcp_service에 없다면 기본값을 False로 한다.
-                    if message['sender']['id'] not in dhcp_service:
-                        dhcp_service[message['sender']['id']] = False
 
                     # 만약 동대문역사문화공원역 5호선-4호선 환승방법 안내 요청이 On이고
                     # 메시지 내용에 슬래시(/)가 포함되어 있으면
                     # 올바른 안내 요청을 한 것으로 승인한다.
                     #
-                    if dhcp_service[message['sender']['id']] \
-                    and '/' in message['message']['text']:
+                    if cur_dhcp.status and '/' in message['message']['text']:
                         # 요청이 승인되었으므로 Off한다.
-                        dhcp_service[message['sender']['id']] = False
+                        cur_dhcp.status = False
+                        cur_dhcp.save()
 
                         # 환승안내를 통해 응답받은 '5호선 / 4호선' 역명을 슬래시로 분리하여
                         # splited[0]에 5호선역, splited[1]에 4호선역이 대입된다.
@@ -297,7 +305,7 @@ Sookmyung Women's University (숙대입구) ~ Ssangmun (쌍문)
                             })
 
                     # 자동화된 코드에서 형식에 맞지 않게 입력했을 경우
-                    if dhcp_service[message['sender']['id']]:
+                    if cur_dhcp.status:
                         post_facebook_message(message['sender']['id'], {
                             'messaging_type': 'RESPONSE',
                             'recipient':{'id':''},
