@@ -276,7 +276,7 @@ def message(request):
         })
 
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
-    elif dhcp_service[user_name] and '/' in content_name:
+    elif cur_dhcp.status and '/' in content_name:
         # 현재 사용자의 True에서 원래대로 False로 바꾼다. (Reset)
         cur_dhcp.status = False
         cur_dhcp.save()
