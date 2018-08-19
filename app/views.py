@@ -6,15 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
 from lib import *
+from .models import KakaoDHCPService
 
 #### 데이터베이스 Databases ####
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
-# dhcp_service: 사용자 이름(token)에 따라 5호선-4호선 환승방법 안내의 Input message와 메뉴
-#   선택의 message를 구별함. Dictionary의 형태는 "사용자토큰":Boolean 형태이다.
 #
 default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀가안내 미리 확인',
 '5호선 - 4호선 환승방법 안내', '서비스 이용 규칙', '서울 1~9호선 통학통근러 오픈채팅방']
-dhcp_service = {}
 
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
@@ -45,13 +43,15 @@ def message(request):
     except ValueError:
         menu_idx = -1
 
-    # 사용자 코드가 dhcp_service에 없다면 기본값을 False로 한다.
-    if user_name not in dhcp_service:
-        dhcp_service[user_name] = False
+    # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 불러온다.
+    try:
+        cur_dhcp = KakaoDHCPService.objects.get(user=user_name)
+    except ObjectDoesNotExist:
+        cur_dhcp = KakaoDHCPService.objects.create(user=user_name, status=False)
+        cur_dhcp.save()
 
     ################# 자정/심야시간 귀가안내 #################
     if menu_idx == 0:
-        # dhcp_service[user_name] = True
         now = datetime.datetime.now()  # 현재 시각 불러오기
         if now.hour == 23 or now.hour == 0:  # 오후 11시~(익일)자정 여부
             return JsonResponse({
@@ -146,7 +146,6 @@ def message(request):
 
     ################# 자정/심야시간 귀가안내 미리 확인 #################
     elif menu_idx == 1:
-        # dhcp_service[user_name] = True
         return JsonResponse({
             'message': {
                 'text':
@@ -179,7 +178,8 @@ def message(request):
 
     ################# 5호선 - 4호선 환승방법 안내 #################
     elif menu_idx == 2:
-        dhcp_service[user_name] = True
+        cur_dhcp.status = True
+        cur_dhcp.save()
         return JsonResponse({
             'message': {
                 'text':
@@ -276,8 +276,9 @@ def message(request):
 
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
     elif dhcp_service[user_name] and '/' in content_name:
-        # dhcp_service[user_name]을 True에서 원래대로 False로 바꾼다. (Reset)
-        dhcp_service[user_name] = False
+        # 현재 사용자의 True에서 원래대로 False로 바꾼다. (Reset)
+        cur_dhcp.status = False
+        cur_dhcp.save()
 
         # 환승안내를 통해 응답받은 '5호선 / 4호선' 역명을 슬래시로 분리하여
         # splited[0]에 5호선역, splited[1]에 4호선역이 대입된다.
@@ -336,7 +337,7 @@ def message(request):
         })
 
     ################# 자동화된 코드에서 형식에 맞지 않게 입력했을 경우 #################
-    elif dhcp_service[user_name]:
+    elif cur_dhcp.status:  # 현재 사용자의 DHCP 안내가 True일 경우
         return JsonResponse({
             'message': {
                 'text':
@@ -368,21 +369,39 @@ def friend_add(request):
     # 카카오 서버로부터 받은 JSON request에서 데이터를 추출한다.
     json_str = (request.body).decode('utf-8')
     received_json = json.loads(json_str)  # JSON 파일 디코딩
-    user_name = received_json['user_key']
-    dhcp_service[user_name] = False  # dhcp_service를 기본값으로 설정한다.
+    user_name = received_json['user_key']  # 사용자 키
+
+    # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 아무런 동작을 하지 않는다.
+    try:
+        cur_dhcp = KakaoDHCPService.objects.get(user=user_name)
+    except ObjectDoesNotExist:
+        cur_dhcp = KakaoDHCPService.objects.create(user=user_name, status=False)
+        cur_dhcp.save()
     return HttpResponse()
 
 @csrf_exempt
 def friend_block(request, user_key):
     if request.method == 'DELETE':
-        del dhcp_service[user_key]  # dhcp_service에서 사용자 데이터를 삭제한다.
+        # 사용자 키가 데이터베이스에 없다면 아무런 동작을 하지 않고, 있으면 삭제한다.
+        try:
+            cur_dhcp = KakaoDHCPService.objects.get(user=user_key)
+            cur_dhcp.delete()
+        except ObjectDoesNotExist:
+            pass
     return HttpResponse()
 
 ###############*************** 채팅방 나가기 알림 ***************###############
 @csrf_exempt
 def friend_leave(request, user_key):
     if request.method == 'DELETE':
-        dhcp_service[user_key] = False  # dhcp_service를 기본값으로 설정한다.
+        # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 기본값으로 변경한다.
+        try:
+            cur_dhcp = KakaoDHCPService.objects.get(user=user_name)
+            cur_dhcp.status = False
+            cur_dhcp.save()
+        except ObjectDoesNotExist:
+            cur_dhcp = KakaoDHCPService.objects.create(user=user_name, status=False)
+            cur_dhcp.save()
     return HttpResponse()
 
 #################***************** 이미지 로딩 *****************#################
