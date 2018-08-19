@@ -7,6 +7,7 @@ import json
 import datetime
 from lib import *
 from .models import KakaoDHCPService
+from django.core.exceptons import ObjectDoesNotExist
 
 #### 데이터베이스 Databases ####
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
