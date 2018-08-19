@@ -7,7 +7,7 @@ import json
 import datetime
 from lib import *
 from .models import KakaoDHCPService
-from django.core.exceptons import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 
 #### 데이터베이스 Databases ####
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
@@ -397,11 +397,11 @@ def friend_leave(request, user_key):
     if request.method == 'DELETE':
         # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 기본값으로 변경한다.
         try:
-            cur_dhcp = KakaoDHCPService.objects.get(user=user_name)
+            cur_dhcp = KakaoDHCPService.objects.get(user=user_key)
             cur_dhcp.status = False
             cur_dhcp.save()
         except ObjectDoesNotExist:
-            cur_dhcp = KakaoDHCPService.objects.create(user=user_name, status=False)
+            cur_dhcp = KakaoDHCPService.objects.create(user=user_key, status=False)
             cur_dhcp.save()
     return HttpResponse()
 
