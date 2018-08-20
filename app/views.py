@@ -217,6 +217,9 @@ def message(request):
 자동으로 알려드리겠습니다.
 
 예) 강동역 / 혜화역
+
+(취소를 원하신다면
+'취소'라고 입력해주세요)
 ''',
                 'photo': {
                     # url form: http://<host>/media/DHCP_Transfer.jpg
@@ -277,7 +280,7 @@ def message(request):
 
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
     elif cur_dhcp.status and '/' in content_name:
-        # 현재 사용자의 True에서 원래대로 False로 바꾼다. (Reset)
+        # 현재 사용자의 요청을 받아들인다. (Reset)
         cur_dhcp.status = False
         cur_dhcp.save()
 
@@ -302,7 +305,9 @@ def message(request):
 
 참고로 4호선은
 숙대입구~쌍문 구간만 검색 가능합니다.
-(동대문역사문화공원 제외)'''
+(동대문역사문화공원 제외)
+
+다시 시도해주세요.'''
                 },
                 'keyboard': {
                     'type': 'buttons',
@@ -339,18 +344,32 @@ def message(request):
 
     ################# 자동화된 코드에서 형식에 맞지 않게 입력했을 경우 #################
     elif cur_dhcp.status:  # 현재 사용자의 DHCP 안내가 True일 경우
-        return JsonResponse({
-            'message': {
-                'text':
+        if '취소' in content_name:  # 취소 요청시
+            # 현재 사용자의 요청을 취소시킨다. (Reset)
+            cur_dhcp.status = False
+            cur_dhcp.save()
+            return JsonResponse({
+                'message': {
+                    'text': '취소되었습니다.'
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
+                }
+            })
+        else:
+            return JsonResponse({
+                'message': {
+                    'text':
 '''출발지와 목적지를 형식에 맞게
 다시 입력해주십시오:
 
 [ 출발지 / 목적지 ]'''
-            },
-            'keyboard': {
-                'type': 'text'
-            }
-        })
+                },
+                'keyboard': {
+                    'type': 'text'
+                }
+            })
 
     ################# 나머지 #################
     else:
