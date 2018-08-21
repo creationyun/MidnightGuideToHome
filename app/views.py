@@ -222,9 +222,9 @@ def message(request):
 '취소'라고 입력해주세요)
 ''',
                 'photo': {
-                    # url form: http://<host>/media/DHCP_Transfer.jpg
+                    # url form: http://<host>/static/DHCP_Transfer.jpg
                     'url': 'http://' + request.get_host() + \
-                    '/media/DHCP_Transfer.jpg',
+                    '/static/DHCP_Transfer.jpg',
                     'width': 1266,
                     'height': 1775
                 }
