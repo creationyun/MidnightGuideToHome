@@ -81,7 +81,14 @@ def message(request):
 예) 청량리역 / 서울역
 
 그리고 마음을 차분히 가라앉히고
-잠시만 기다려주세요...'''
+잠시만 기다려주세요...''',
+                    'photo': {
+                        # url form: http://<host>/static/Response_Input.png
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Input.png',
+                        'width': 1058,
+                        'height': 794
+                    }
                 },
                 'keyboard': {
                     'type': 'buttons',
@@ -115,7 +122,14 @@ def message(request):
 예) 청량리역 / 서울역
 
 그리고 마음을 차분히 가라앉히고
-잠시만 기다려주세요...'''
+잠시만 기다려주세요...''',
+                    'photo': {
+                        # url form: http://<host>/static/Response_Input.png
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Input.png',
+                        'width': 1058,
+                        'height': 794
+                    }
                 },
                 'keyboard': {
                     'type': 'buttons',
@@ -137,7 +151,16 @@ def message(request):
 오전 1시 정각부터
 오전 4시 59분까지 운영됩니다.
 
-지금은 자정/심야시간이 아닙니다.'''
+지금은 자정/심야시간이 아닙니다.''',
+                    'photo': {
+                        # url form:
+                        # http://<host>/static/Response_Unavailable.png
+                        #
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Unavailable.png',
+                        'width': 1058,
+                        'height': 794
+                    }
                 },
                 'keyboard': {
                     'type': 'buttons',
