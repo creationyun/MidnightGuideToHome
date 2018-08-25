@@ -47,8 +47,9 @@ def message(request):
     # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 불러온다.
     try:
         cur_dhcp = KakaoDHCPService.objects.get(user=user_name)
+        cur_dhcp.save()  # lastused_date 현재 시각 동기화
     except ObjectDoesNotExist:
-        cur_dhcp = KakaoDHCPService.objects.create(user=user_name, status=False)
+        cur_dhcp = KakaoDHCPService.objects.create(user=user_name)
         cur_dhcp.save()
 
     ################# 자정/심야시간 귀가안내 #################
