@@ -3,4 +3,4 @@
 db.sqlite3
 nohup.out
 tokens.py
-settings.py
+MidnightGuideToHome/settings.py
