@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
+from .models import KakaoDHCPService
 import json
 import datetime
 from lib import *
-from .models import KakaoDHCPService
-from django.core.exceptions import ObjectDoesNotExist
 
 #### 데이터베이스 Databases ####
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
@@ -57,37 +57,7 @@ def message(request):
         if now.hour == 23 or now.hour == 0:  # 오후 11시~(익일)자정 여부
             return JsonResponse({
                 'message': {
-                    'text':
-'''자정/심야시간 귀가안내
-서비스를 이용해주셔서
-감사합니다.
-
-자정시간 귀가안내 서비스는
-오후 11시 정각부터
-익일 오전 12시 59분까지
-운영됩니다.
-
-출발지와 도착지를 알려주시면
-현재 시간에 맞는
-막차 경로들을
-알려드리겠습니다.
-
-(지하철막차, 일반버스,
-심야버스, 단거리 택시 등)
-
-아직 자동답변은
-지원되지 않습니다.
-'상담원으로 전환하기'
-버튼을 눌러
-상담원 채팅으로 전환한 다음
-
-[ 출발지 / 목적지 ] 를
-형식에 맞게 입력해주세요.
-예) 청량리역 / 서울역
-
-그리고 마음을
-차분히 가라앉히고
-잠시만 기다려주세요...''',
+                    'text': MidnightServiceKakao,
                     'photo': {
                         # url form: http://<host>/static/Response_Input.png
                         'url': 'http://' + request.get_host() + \
@@ -104,38 +74,7 @@ def message(request):
         elif now.hour >= 1 and now.hour <= 4:  # 오전 1시~4시 여부
             return JsonResponse({
                 'message': {
-                    'text':
-'''자정/심야시간 귀가안내
-서비스를 이용해주셔서
-감사합니다.
-
-오전 1시 정각부터
-오전 4시 59분까지 운영되는
-심야시간 귀가안내
-서비스입니다.
-
-심야시간대는
-모든 지하철은 물론이고
-버스까지 대부분 다 끊긴
-시간대이기 때문에
-택시거리를 줄여서
-최대한 교통비를
-절약하기 위해
-최선을 다하겠습니다.
-
-아직 자동답변은
-지원되지 않습니다.
-'상담원으로 전환하기'
-버튼을 눌러
-상담원 채팅으로 전환한 다음
-
-[ 출발지 / 목적지 ] 를
-형식에 맞게 입력해주세요.
-예) 청량리역 / 서울역
-
-그리고 마음을
-차분히 가라앉히고
-잠시만 기다려주세요...''',
+                    'text': LatenightServiceKakao,
                     'photo': {
                         # url form: http://<host>/static/Response_Input.png
                         'url': 'http://' + request.get_host() + \
@@ -152,23 +91,7 @@ def message(request):
         else:
             return JsonResponse({
                 'message': {
-                    'text':
-'''자정/심야시간 귀가안내
-서비스를 이용해주셔서
-감사합니다.
-
-자정시간 귀가안내 서비스는
-오후 11시 정각부터
-익일 오전 12시 59분까지
-운영되며,
-
-심야시간 귀가안내 서비스는
-오전 1시 정각부터
-오전 4시 59분까지
-운영됩니다.
-
-지금은 자정/심야시간이
-아닙니다.''',
+                    'text': MidnightUnavailableKakao,
                     'photo': {
                         # url form:
                         # http://<host>/static/Response_Unavailable.png
@@ -189,27 +112,7 @@ def message(request):
     elif menu_idx == 1:
         return JsonResponse({
             'message': {
-                'text':
-'''자정시간 귀가안내 서비스를
-이용해주셔서 감사합니다.
-자정~심야 시간대에 대한 귀가안내를
-미리 확인하는 서비스입니다.
-이 서비스는 24시간 언제든지
-이용 가능하며,
-오후 11시부터 오전 4시 사이의
-심야시간에 어떻게 귀가할 것인지
-미리 확인이 가능합니다.
-
-아직 자동답변은 지원되지 않습니다.
-'상담원으로 전환하기' 버튼을 눌러
-상담원 채팅으로 전환한 다음
-
-[ (자정 혹은 심야) / 출발지 / 목적지 ]
-를 형식에 맞게 입력해주세요.
-예) 심야 / 청량리역 / 신월동 우성상가
-
-그리고 마음을 차분히 가라앉히고
-잠시만 기다려주세요...'''
+                'text': MidnightAdvanceKakao
             },
             'keyboard': {
                 'type': 'buttons',
@@ -223,44 +126,7 @@ def message(request):
         cur_dhcp.save()
         return JsonResponse({
             'message': {
-                'text':
-'''7월 18일~10월 31일동안
-5호선 동대문역사문화공원역
-환승통로가 폐쇄되어
-
-5호선에서 4호선,
-4호선에서 5호선으로
-환승하실 수 없습니다.
-
-그래서,
-5호선에서 4호선으로
-환승하기 위해
-동대문역사문화공원역을
-이용하셨던 분들은
-10월까지 우회해서
-환승해야 합니다.
-
-자정시간 귀가안내 서비스는
-당황스러우셨던 여러분의
-마음을 정리하고,
-5호선-4호선 환승방법을
-친절하게 안내해드리고자
-노력하고 있습니다.
-
-5호선 지하철역과
-4호선 지하철역을
-[ 5호선역 / 4호선역 ]
-형식으로 알려주시면
-
-동대문역사문화공원역
-환승통로 폐쇄시의 경로를
-자동으로 알려드리겠습니다.
-
-예) 강동역 / 혜화역
-
-(취소를 원하신다면
-'취소'라고 입력해주세요)
-''',
+                'text': DHCPServiceKakao,
                 'photo': {
                     # url form: http://<host>/static/DHCP_Transfer.jpg
                     'url': 'http://' + request.get_host() + \
@@ -339,15 +205,7 @@ def message(request):
         if result[0] == '':
             return JsonResponse({
                 'message': {
-                    'text':
-'''경로를 찾을 수 없습니다.
-5호선 / 4호선 순서로 입력하셔야 합니다.
-
-참고로 4호선은
-숙대입구~쌍문 구간만 검색 가능합니다.
-(동대문역사문화공원 제외)
-
-다시 시도해주세요.'''
+                    'text': PathNotFoundKakao
                 },
                 'keyboard': {
                     'type': 'buttons',
@@ -400,11 +258,7 @@ def message(request):
         else:
             return JsonResponse({
                 'message': {
-                    'text':
-'''출발지와 목적지를 형식에 맞게
-다시 입력해주십시오:
-
-[ 출발지 / 목적지 ]'''
+                    'text': InvalidFormatKakao
                 },
                 'keyboard': {
                     'type': 'text'
