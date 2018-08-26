@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-# You must set your own secret key on
+#### You must set your own secret key on
 # https://www.miniwebtool.com/django-secret-key-generator/
 #
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -32,10 +32,12 @@ SECRET_KEY = '(Hidden)'  # The secret key is hidden.
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+#### You must add your own host on... (.domain.com, etc.)
 ALLOWED_HOSTS = [
     'localhost',
     '.amazonaws.com',
     '.ngrok.io',
+    # '.example.com',
 ]
 
 
