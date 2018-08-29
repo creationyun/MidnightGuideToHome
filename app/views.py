@@ -360,7 +360,7 @@ def friend_add(request):
     try:
         cur_serv = KakaoService.objects.get(user=user_name)
     except ObjectDoesNotExist:
-        cur_serv = KakaoService.objects.create(user=user_name, dhcp_status=False)
+        cur_serv = KakaoService.objects.create(user=user_name)
         cur_serv.save()
     return HttpResponse()
 
@@ -383,11 +383,10 @@ def friend_leave(request, user_key):
         try:
             cur_serv = KakaoService.objects.get(user=user_key)
             cur_serv.dhcp_status = False
+            cur_serv.nightbus_status = False
             cur_serv.save()
         except ObjectDoesNotExist:
-            cur_serv = KakaoService.objects.create(
-                user=user_key, dhcp_status=False
-            )
+            cur_serv = KakaoService.objects.create(user=user_key)
             cur_serv.save()
     return HttpResponse()
 
