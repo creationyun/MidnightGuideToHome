@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import KakaoDHCPService
+from .models import KakaoService
 
 # Register your models here.
-admin.site.register(KakaoDHCPService)
+admin.site.register(KakaoService)
