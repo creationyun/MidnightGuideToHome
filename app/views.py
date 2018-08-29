@@ -306,24 +306,20 @@ def message(request):
             #
             # N61: 양천 ~~ 방배동~방배역~예술의전당앞~남부터미널역~교대역 ~~ 노원
             #
-            # 더 자세한 심야버스 정보를 알고 싶으시다면
-            # '바로가기'를 클릭해주세요.
+            # 더 자세한 심야버스 정보를 알고 싶으시다면: 
+            # http://pf.kakao.com/_GskxcC/27592053
             result_text = content_name + '를 지나는 서울 심야버스는\n'+ \
             '다음과 같습니다:\n\n'
 
             for bus in nightbus_list[content_name]:
                 result_text += bus + '\n\n'
 
-            result_text += '더 자세한 심야버스 정보를 알고 싶으시다면 ' + \
-            "'바로가기'를 클릭해주세요."
+            result_text += '더 자세한 심야버스 정보를 알고 싶으시다면: ' + \
+            "http://pf.kakao.com/_GskxcC/27592053"
 
             return JsonResponse({
                 'message': {
-                    'text': result_text,
-                    'message_button': {
-                        "label": "바로가기",
-                        "url": "http://pf.kakao.com/_GskxcC/27592053"
-                    }
+                    'text': result_text
                 },
                 'keyboard': {
                     'type': 'buttons',
