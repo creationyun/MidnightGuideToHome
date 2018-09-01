@@ -306,7 +306,7 @@ def message(request):
             #
             # N61: 양천 ~~ 방배동~방배역~예술의전당앞~남부터미널역~교대역 ~~ 노원
             #
-            # 더 자세한 심야버스 정보를 알고 싶으시다면: 
+            # 더 자세한 심야버스 정보를 알고 싶으시다면:
             # http://pf.kakao.com/_GskxcC/27592053
             result_text = content_name + '를 지나는 서울 심야버스는\n'+ \
             '다음과 같습니다:\n\n'
@@ -345,7 +345,8 @@ def message(request):
     else:
         return JsonResponse({
             'message': {
-                'text': '잘못된 입력입니다.'
+                'text': '잘못된 입력입니다.\n\n'+ \
+                '(메뉴가 표시되지 않을 경우, 채팅방에서 나간 후 다시 들어오십시오.)'
             },
             'keyboard': {
                 'type': 'buttons',
