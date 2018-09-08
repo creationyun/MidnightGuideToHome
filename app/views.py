@@ -14,7 +14,7 @@ from lib import *
 #
 default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀가안내 미리 확인',
 '5호선 - 4호선 환승방법 안내', '서울 심야버스 알아보기', '서비스 이용 규칙',
-'서울 1~9호선 통학통근러 오픈채팅방']
+'개인정보 처리방침', '서울 1~9호선 통학통근러 오픈채팅방']
 
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
@@ -53,162 +53,9 @@ def message(request):
         cur_serv = KakaoService.objects.create(user=user_name)
         cur_serv.save()
 
-    ################# 자정/심야시간 귀가안내 #################
-    if menu_idx == 0:
-        now = datetime.datetime.now()  # 현재 시각 불러오기
-        if now.hour == 23 or now.hour == 0:  # 오후 11시~(익일)자정 여부
-            return JsonResponse({
-                'message': {
-                    'text': MidnightServiceKakao,
-                    'photo': {
-                        # url form: http://<host>/static/Response_Input.png
-                        'url': 'http://' + request.get_host() + \
-                        '/static/Response_Input.png',
-                        'width': 1058,
-                        'height': 794
-                    }
-                },
-                'keyboard': {
-                    'type': 'buttons',
-                    'buttons': ['상담 취소/완료']
-                }
-            })
-        elif now.hour >= 1 and now.hour <= 4:  # 오전 1시~4시 여부
-            return JsonResponse({
-                'message': {
-                    'text': LatenightServiceKakao,
-                    'photo': {
-                        # url form: http://<host>/static/Response_Input.png
-                        'url': 'http://' + request.get_host() + \
-                        '/static/Response_Input.png',
-                        'width': 1058,
-                        'height': 794
-                    }
-                },
-                'keyboard': {
-                    'type': 'buttons',
-                    'buttons': ['상담 취소/완료']
-                }
-            })
-        else:
-            return JsonResponse({
-                'message': {
-                    'text': MidnightUnavailableKakao,
-                    'photo': {
-                        # url form:
-                        # http://<host>/static/Response_Unavailable.png
-                        #
-                        'url': 'http://' + request.get_host() + \
-                        '/static/Response_Unavailable.png',
-                        'width': 1058,
-                        'height': 794
-                    }
-                },
-                'keyboard': {
-                    'type': 'buttons',
-                    'buttons': default_menu_btn
-                }
-            })
-
-    ################# 자정/심야시간 귀가안내 미리 확인 #################
-    elif menu_idx == 1:
-        return JsonResponse({
-            'message': {
-                'text': MidnightAdvanceKakao
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': ['상담 취소/완료']
-            }
-        })
-
-    ################# 5호선 - 4호선 환승방법 안내 #################
-    elif menu_idx == 2:
-        cur_serv.dhcp_status = True
-        cur_serv.save()
-        return JsonResponse({
-            'message': {
-                'text': DHCPServiceKakao,
-                'photo': {
-                    # url form: http://<host>/static/DHCP_Transfer.jpg
-                    'url': 'http://' + request.get_host() + \
-                    '/static/DHCP_Transfer.jpg',
-                    'width': 1266,
-                    'height': 1775
-                }
-            },
-            'keyboard': {
-                'type': 'text'
-            }
-        })
-
-    ################# 서울 심야버스 알아보기 #################
-    elif menu_idx == 3:
-        cur_serv.nightbus_status = True
-        cur_serv.save()
-        return JsonResponse({
-            'message': {
-                'text': NightBusServiceKakao,
-                'photo': {
-                    # url form: http://<host>/static/Seoul_Nightbus.png
-                    'url': 'http://' + request.get_host() + \
-                    '/static/Seoul_Nightbus.png',
-                    'width': 1000,
-                    'height': 796
-                }
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': seoul_districts+['취소']
-            }
-        })
-
-    ################# 서비스 이용 규칙 #################
-    elif menu_idx == 4:
-        return JsonResponse({
-            'message': {
-                'text': '서비스 이용 규칙입니다.',
-                'message_button': {
-                    "label": "바로가기",
-                    "url": "http://pf.kakao.com/_GskxcC/21769650"
-                }
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': default_menu_btn
-            }
-        })
-
-    ################# 통학통근러 오픈채팅방 #################
-    elif menu_idx == 5:
-        return JsonResponse({
-            'message': {
-                'text': '서울 1~9호선 통학통근러 오픈채팅방',
-                'message_button': {
-                    "label": "바로가기",
-                    "url": "https://open.kakao.com/o/gY4BH4v"
-                }
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': default_menu_btn
-            }
-        })
-
-    ################# 귀가 안내 취소 혹은 완료시 #################
-    elif content_name == '상담 취소/완료':
-        return JsonResponse({
-            'message': {
-                'text': '서비스가 종료되었습니다.'
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': default_menu_btn
-            }
-        })
 
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
-    elif cur_serv.dhcp_status:
+    if cur_serv.dhcp_status:
         # 출발지 / 목적지 형식으로 입력했다면...
         if '/' in content_name:
             # 현재 사용자의 요청을 받아들인다. (Reset)
@@ -340,6 +187,176 @@ def message(request):
                     'buttons': default_menu_btn
                 }
             })
+
+    ################# 자정/심야시간 귀가안내 #################
+    elif menu_idx == 0:
+        now = datetime.datetime.now()  # 현재 시각 불러오기
+        if now.hour == 23 or now.hour == 0:  # 오후 11시~(익일)자정 여부
+            return JsonResponse({
+                'message': {
+                    'text': MidnightServiceKakao,
+                    'photo': {
+                        # url form: http://<host>/static/Response_Input.png
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Input.png',
+                        'width': 1058,
+                        'height': 794
+                    }
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': ['상담 취소/완료']
+                }
+            })
+        elif now.hour >= 1 and now.hour <= 4:  # 오전 1시~4시 여부
+            return JsonResponse({
+                'message': {
+                    'text': LatenightServiceKakao,
+                    'photo': {
+                        # url form: http://<host>/static/Response_Input.png
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Input.png',
+                        'width': 1058,
+                        'height': 794
+                    }
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': ['상담 취소/완료']
+                }
+            })
+        else:
+            return JsonResponse({
+                'message': {
+                    'text': MidnightUnavailableKakao,
+                    'photo': {
+                        # url form:
+                        # http://<host>/static/Response_Unavailable.png
+                        #
+                        'url': 'http://' + request.get_host() + \
+                        '/static/Response_Unavailable.png',
+                        'width': 1058,
+                        'height': 794
+                    }
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
+                }
+            })
+
+    ################# 자정/심야시간 귀가안내 미리 확인 #################
+    elif menu_idx == 1:
+        return JsonResponse({
+            'message': {
+                'text': MidnightAdvanceKakao
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': ['상담 취소/완료']
+            }
+        })
+
+    ################# 5호선 - 4호선 환승방법 안내 #################
+    elif menu_idx == 2:
+        cur_serv.dhcp_status = True
+        cur_serv.save()
+        return JsonResponse({
+            'message': {
+                'text': DHCPServiceKakao,
+                'photo': {
+                    # url form: http://<host>/static/DHCP_Transfer.jpg
+                    'url': 'http://' + request.get_host() + \
+                    '/static/DHCP_Transfer.jpg',
+                    'width': 1266,
+                    'height': 1775
+                }
+            },
+            'keyboard': {
+                'type': 'text'
+            }
+        })
+
+    ################# 서울 심야버스 알아보기 #################
+    elif menu_idx == 3:
+        cur_serv.nightbus_status = True
+        cur_serv.save()
+        return JsonResponse({
+            'message': {
+                'text': NightBusServiceKakao,
+                'photo': {
+                    # url form: http://<host>/static/Seoul_Nightbus.png
+                    'url': 'http://' + request.get_host() + \
+                    '/static/Seoul_Nightbus.png',
+                    'width': 1000,
+                    'height': 796
+                }
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': seoul_districts+['취소']
+            }
+        })
+
+    ################# 서비스 이용 규칙 #################
+    elif menu_idx == 4:
+        return JsonResponse({
+            'message': {
+                'text': '서비스 이용 규칙입니다.',
+                'message_button': {
+                    "label": "바로가기",
+                    "url": "http://pf.kakao.com/_GskxcC/21769650"
+                }
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
+
+    ################# 개인정보 처리방침 #################
+    elif menu_idx == 5:
+        return JsonResponse({
+            'message': {
+                'text': '개인정보 처리방침입니다.',
+                'message_button': {
+                    "label": "바로가기",
+                    "url": "http://pf.kakao.com/_GskxcC/28278836"
+                }
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
+
+    ################# 통학통근러 오픈채팅방 #################
+    elif menu_idx == 6:
+        return JsonResponse({
+            'message': {
+                'text': '서울 1~9호선 통학통근러 오픈채팅방',
+                'message_button': {
+                    "label": "바로가기",
+                    "url": "https://open.kakao.com/o/gY4BH4v"
+                }
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
+
+    ################# 귀가 안내 취소 혹은 완료시 #################
+    elif content_name == '상담 취소/완료':
+        return JsonResponse({
+            'message': {
+                'text': '서비스가 종료되었습니다.'
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
 
     ################# 나머지 #################
     else:
