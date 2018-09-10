@@ -34,8 +34,20 @@ def message(request):
 
     user_name = received_json['user_key']
     # user_name은 사용자를 구별하기 위해 사용됨
-    # type_name = received_json['type']
+    type_name = received_json['type']
     # type_name은 사용자가 보낸 값의 속성을 구별(text, photo 등)
+
+    # 사용자가 보낸 값이 텍스트가 아니라면
+    if type_name != 'text':
+        return JsonResponse({
+            'message': {
+                'text': '챗봇은 텍스트 형식으로만 반응할 수 있습니다.'
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
 
     # 메시지를 메뉴 버튼 리스트에 대응하여 인덱스를 찾기
     # 찾지 못하면 -1이 된다.
@@ -155,6 +167,7 @@ def message(request):
             #
             # 더 자세한 심야버스 정보를 알고 싶으시다면:
             # http://pf.kakao.com/_GskxcC/27592053
+            #
             result_text = content_name + '를 지나는 서울 심야버스는\n'+ \
             '다음과 같습니다:\n\n'
 
