@@ -9,31 +9,37 @@ Midnight Guide To Home Service chatbot software is a free software.
 ## app
 카카오톡 플러스친구 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
 
-Django app is collected functions required to operate the KakaoTalk Plusfriend service.
+Django app is collected functions required to operate the
+KakaoTalk Plusfriend service.
 
 ## app_fb
 페이스북 챗봇 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
 
-Django app_fb is collected functions required to operate the Facebook chatbot service.
+Django app_fb is collected functions required to operate the
+Facebook chatbot service.
 
 ## static
 이미지, admin 페이지 css, js 파일 등을 관리하는 장고 static 파일입니다.
 
 자정시간 귀가안내 서비스 요청에 사용되는 이미지도 포함되어 있습니다.
 
-It is a Django static files managing the images, css, js files of the admin page, etc.
+It is a Django static files managing the images, css, js files
+of the admin page, etc.
 
 It contains images used by Midnight Guide To Home requests.
 
 ## 필요한 구성요소 (Required Components)
-Linux (Ubuntu, Debian, etc.), Python 3, Django 2.1, uWSGI, nginx, MongoDB (+pymongo)
+Linux (Ubuntu, Debian, etc.), Python 3, Django 2.1, uWSGI, nginx,
+MongoDB (+pymongo, djongo)
 
 ## 별도로 추가해야 할 파일 (Files to Add Separately)
 
 ### MidnightGuideToHome/settings.py
-settings_secret_removed.py 파일에서 `SECRET_KEY` 등을 추가해서 이름을 settings.py로 원래대로 변경 후 사용하면 됩니다.
+settings_secret_removed.py 파일에서 `SECRET_KEY` 등을 추가해서
+이름을 settings.py로 원래대로 변경 후 사용하면 됩니다.
 
-In settings_secret_removed.py file, add `SECRET_KEY`, etc., and change the name back to its original name, settings.py.
+In settings_secret_removed.py file, add `SECRET_KEY`, etc.,
+and change the name back to its original name, settings.py.
 ### tokens.py
 ```
 PAGE_ACCESS_TOKEN = Own Facebook Page Access Token
@@ -108,9 +114,11 @@ chmod-socket = 666
 vacuum = true
 ```
 
-(base: MidnightGuideToHome이 있는 위치. /home/ubuntu 형태인 경우가 많다.)
+(base: MidnightGuideToHome이 있는 위치.
+/home/ubuntu 형태인 경우가 많다.)
 
-(base: location with MidnightGuideToHome. It is often in the form of /home/ubuntu.)
+(base: location with MidnightGuideToHome.
+It is often in the form of /home/ubuntu.)
 
 ### 8. /etc/systemd/system/uwsgi.service를 편집합니다.
 ### Edit /etc/systemd/system/uwsgi.service file.
@@ -135,8 +143,10 @@ StandardError=syslog
 WantedBy=multi-user.target
 ```
 
-### 9. nginx를 설치하고 /etc/nginx/sites-available 디렉토리에 MidnightGuideToHome 파일을 생성합니다.
-### Install nginx, and generate MidnightGuideToHome file in /etc/nginx/sites-available.
+### 9. nginx를 설치하고 /etc/nginx/sites-available 디렉토리에
+### MidnightGuideToHome 파일을 생성합니다.
+### Install nginx, and generate MidnightGuideToHome file in
+### /etc/nginx/sites-available.
 ```
 $ sudo apt install nginx
 $ sudo nano /etc/nginx/sites-available/MidnightGuideToHome
@@ -158,8 +168,10 @@ server {
 }
 ```
 
-### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만든 후 nginx가 제대로 설정됐는지 테스트합니다.
-### Create a shortcut to the file in /etc/nginx/sites-enabled, and test for configuration of nginx.
+### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만든 후
+### nginx가 제대로 설정됐는지 테스트합니다.
+### Create a shortcut to the file in /etc/nginx/sites-enabled,
+### and test for configuration of nginx.
 ```
 $ sudo ln -s /etc/nginx/sites-available/MidnightGuideToHome /etc/nginx/sites-enabled
 $ sudo service nginx configtest
@@ -191,10 +203,12 @@ Modify settings.py (add secret key), make tokens.py file and...
 (venv) $ ./manage.py migrate
 ```
 
-비밀 키와 호스트를 MidnightGuideToHome/MidnightGuideToHome/settings.py의 ALLOWED_HOSTS에 추가해주세요.
+비밀 키와 호스트를 MidnightGuideToHome/MidnightGuideToHome/settings.py의
+ALLOWED_HOSTS에 추가해주세요.
 
-Please add your secret key and hosts in ALLOWED_HOSTS of MidnightGuideToHome/MidnightGuideToHome/settings.py
+Please add your secret key and hosts in ALLOWED_HOSTS of
+MidnightGuideToHome/MidnightGuideToHome/settings.py
 
-## 문의사항
-- 이메일: creationyun@gmail.com
-- 페이스북: https://www.facebook.com/creationyun
+## 문의사항 (Contact Us)
+- Email: creationyun@gmail.com
+- Facebook: https://www.facebook.com/creationyun
