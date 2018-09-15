@@ -238,7 +238,8 @@ def message(request):
             #
             # 시청  을지로3가  동대문역사문화공원  ...
             #
-            result_text = '2호선 운임구역 내에 화장실이 있는 역의 목록입니다.\n\n'
+            result_text = content_name + \
+            ' 운임구역 내에 화장실이 있는 역의 목록입니다.\n\n'
             result_text += '* 승강장에 화장실이 있음\n? 운임구역에 있는지 불확실함\n'
             result_text += '(확실하면 건의해주시기 바랍니다.)\n\n'
             result_text += '역 이름 옆에 (1호선)처럼 타 노선이 붙어있는 경우는 '
