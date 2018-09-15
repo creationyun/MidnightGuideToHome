@@ -13,8 +13,8 @@ from lib import *
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
 #
 default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀가안내 미리 확인',
-'5호선 - 4호선 환승방법 안내', '서울 심야버스 알아보기', '서비스 이용 규칙',
-'개인정보 처리방침', '서울 1~9호선 통학통근러 오픈채팅방']
+'5호선 - 4호선 환승방법 안내', '서울 심야버스 알아보기', '지하철 운임구역 화장실 알아보기',
+'서비스 이용 규칙', '개인정보 처리방침', '서울 1~9호선 통학통근러 오픈채팅방']
 
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
@@ -37,18 +37,6 @@ def message(request):
     type_name = received_json['type']
     # type_name은 사용자가 보낸 값의 속성을 구별(text, photo 등)
 
-    # 사용자가 보낸 값이 텍스트가 아니라면
-    if type_name != 'text':
-        return JsonResponse({
-            'message': {
-                'text': '챗봇은 텍스트 형식으로만 반응할 수 있습니다.'
-            },
-            'keyboard': {
-                'type': 'buttons',
-                'buttons': default_menu_btn
-            }
-        })
-
     # 메시지를 메뉴 버튼 리스트에 대응하여 인덱스를 찾기
     # 찾지 못하면 -1이 된다.
     #
@@ -65,6 +53,21 @@ def message(request):
         cur_serv = KakaoService.objects.create(user=user_name)
         cur_serv.save()
 
+    # 사용자가 보낸 값이 텍스트가 아니라면
+    if type_name != 'text':
+        cur_serv.dhcp_status = False
+        cur_serv.nightbus_status = False
+        cur_serv.paidtoilet_status = False
+        cur_serv.save()
+        return JsonResponse({
+            'message': {
+                'text': '챗봇은 텍스트 형식으로만 반응할 수 있습니다.'
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
 
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
     if cur_serv.dhcp_status:
@@ -123,31 +126,30 @@ def message(request):
                     'buttons': default_menu_btn
                 }
             })
-
+        # 취소 요청시
+        elif '취소' in content_name:
+            # 현재 사용자의 요청을 취소시킨다. (Reset)
+            cur_serv.dhcp_status = False
+            cur_serv.save()
+            return JsonResponse({
+                'message': {
+                    'text': '요청이 취소되었습니다.'
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
+                }
+            })
         # 자동화된 코드에서 형식에 맞지 않게 입력했을 경우
         else:
-            if '취소' in content_name:  # 취소 요청시
-                # 현재 사용자의 요청을 취소시킨다. (Reset)
-                cur_serv.dhcp_status = False
-                cur_serv.save()
-                return JsonResponse({
-                    'message': {
-                        'text': '취소되었습니다.'
-                    },
-                    'keyboard': {
-                        'type': 'buttons',
-                        'buttons': default_menu_btn
-                    }
-                })
-            else:
-                return JsonResponse({
-                    'message': {
-                        'text': InvalidFormatKakao
-                    },
-                    'keyboard': {
-                        'type': 'text'
-                    }
-                })
+            return JsonResponse({
+                'message': {
+                    'text': InvalidFormatKakao
+                },
+                'keyboard': {
+                    'type': 'text'
+                }
+            })
 
     ################# 서울 심야버스 알아보기 자동화 코드 #################
     elif cur_serv.nightbus_status:
@@ -177,6 +179,7 @@ def message(request):
             result_text += '더 자세한 심야버스 정보를 알고 싶으시다면: ' + \
             "http://pf.kakao.com/_GskxcC/27592053"
 
+            # 응답 전송
             return JsonResponse({
                 'message': {
                     'text': result_text
@@ -186,20 +189,103 @@ def message(request):
                     'buttons': default_menu_btn
                 }
             })
-        # 취소 버튼 등 다른 버튼을 선택했다면...
-        else:
+        # 취소 버튼을 선택했다면...
+        elif '취소' in content_name:
             # 현재 사용자의 요청을 취소시킨다. (Reset)
             cur_serv.nightbus_status = False
             cur_serv.save()
             return JsonResponse({
                 'message': {
-                    'text': '취소되었습니다.'
+                    'text': '요청이 취소되었습니다.'
                 },
                 'keyboard': {
                     'type': 'buttons',
                     'buttons': default_menu_btn
                 }
             })
+        # 취소 버튼이 아니면 에러를 띄운다.
+        else:
+            cur_serv.dhcp_status = False
+            cur_serv.nightbus_status = False
+            cur_serv.paidtoilet_status = False
+            cur_serv.save()
+            return JsonResponse({
+                'message': {
+                    'text': ServiceErrorKakao
+                },
+                'keyboard': {
+                    'type': 'text'
+                }
+            })
+
+    ################# 지하철 운임구역 화장실 알아보기 자동화 코드 #################
+    elif cur_serv.paidtoilet_status:
+        # 입력값이 지하철 노선을 선택했다면...
+        if content_name in subway_names:
+            # 현재 사용자의 요청을 받아들인다. (Reset)
+            cur_serv.paidtoilet_status = False
+            cur_serv.save()
+
+            # (예시: 2호선)
+            # 2호선 운임구역 내에 화장실이 있는 역의 목록입니다.
+            #
+            # * 승강장에 화장실이 있음
+            # ? 운임구역에 있는지 불확실함.
+            # (확실하면 건의해주시기 바랍니다.)
+            #
+            # 역 이름 옆에 (1호선)처럼 타 노선이 붙어있는 경우는
+            # 화장실에 들어가기 위해 환승이 요구되는 역입니다.
+            #
+            # 시청  을지로3가  동대문역사문화공원  ...
+            #
+            result_text = '2호선 운임구역 내에 화장실이 있는 역의 목록입니다.\n\n'
+            result_text += '* 승강장에 화장실이 있음\n? 운임구역에 있는지 불확실함\n'
+            result_text += '(확실하면 건의해주시기 바랍니다.)\n\n'
+            result_text += '역 이름 옆에 (1호선)처럼 타 노선이 붙어있는 경우는 '
+            result_text += '화장실에 들어가기 위해 환승이 요구되는 역입니다.\n\n'
+
+            for station in toilet_list[content_name]:
+                result_text += station + '  '
+
+            # 응답 전송
+            return JsonResponse({
+                'message': {
+                    'text': result_text
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
+                }
+            })
+        # 취소 버튼을 선택했다면...
+        elif '취소' in content_name:
+            # 현재 사용자의 요청을 취소시킨다. (Reset)
+            cur_serv.paidtoilet_status = False
+            cur_serv.save()
+            return JsonResponse({
+                'message': {
+                    'text': '요청이 취소되었습니다.'
+                },
+                'keyboard': {
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
+                }
+            })
+        # 취소 버튼이 아니면 에러를 띄운다.
+        else:
+            cur_serv.dhcp_status = False
+            cur_serv.nightbus_status = False
+            cur_serv.paidtoilet_status = False
+            cur_serv.save()
+            return JsonResponse({
+                'message': {
+                    'text': ServiceErrorKakao
+                },
+                'keyboard': {
+                    'type': 'text'
+                }
+            })
+
 
     ################# 자정/심야시간 귀가안내 #################
     elif menu_idx == 0:
@@ -311,8 +397,22 @@ def message(request):
             }
         })
 
-    ################# 서비스 이용 규칙 #################
+    ################# 지하철 운임구역 화장실 알아보기 #################
     elif menu_idx == 4:
+        cur_serv.paidtoilet_status = True
+        cur_serv.save()
+        return JsonResponse({
+            'message': {
+                'text': PaidToiletServiceKakao
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': subway_names+['취소']
+            }
+        })
+
+    ################# 서비스 이용 규칙 #################
+    elif menu_idx == 5:
         return JsonResponse({
             'message': {
                 'text': '서비스 이용 규칙입니다.',
@@ -328,7 +428,7 @@ def message(request):
         })
 
     ################# 개인정보 처리방침 #################
-    elif menu_idx == 5:
+    elif menu_idx == 6:
         return JsonResponse({
             'message': {
                 'text': '개인정보 처리방침입니다.',
@@ -344,7 +444,7 @@ def message(request):
         })
 
     ################# 통학통근러 오픈채팅방 #################
-    elif menu_idx == 6:
+    elif menu_idx == 7:
         return JsonResponse({
             'message': {
                 'text': '서울 1~9호선 통학통근러 오픈채팅방',
@@ -375,8 +475,7 @@ def message(request):
     else:
         return JsonResponse({
             'message': {
-                'text': '잘못된 입력입니다.\n\n'+ \
-                '(메뉴가 표시되지 않을 경우, 채팅방에서 나간 후 다시 들어오십시오.)'
+                'text': ServiceErrorKakao
             },
             'keyboard': {
                 'type': 'buttons',
@@ -420,6 +519,7 @@ def friend_leave(request, user_key):
             cur_serv = KakaoService.objects.get(user=user_key)
             cur_serv.dhcp_status = False
             cur_serv.nightbus_status = False
+            cur_serv.paidtoilet_status = False
             cur_serv.save()
         except ObjectDoesNotExist:
             cur_serv = KakaoService.objects.create(user=user_key)
