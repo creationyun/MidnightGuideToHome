@@ -116,8 +116,8 @@ def message(request):
                 # 동대문역사문화공원 - 4호선 - 혜화
                 #
                 'message': {
-                    'text': '출발지는 '+splited[0]+'(이)고,\n목적지는 '+splited[1]+ \
-                    '(으)로 요청하셨습니다.\n\n'+ \
+                    'text': '출발지는 '+splited[0]+'(이)고,\n목적지는 '+ \
+                    splited[1]+'(으)로 요청하셨습니다.\n\n'+ \
                     '5호선에서 4호선으로 환승하는\n2가지 방법은:\n\n'+ \
                     '1. '+result[0]+'\n\n2. '+result[1]
                 },
@@ -214,7 +214,8 @@ def message(request):
                     'text': ServiceErrorKakao
                 },
                 'keyboard': {
-                    'type': 'text'
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
                 }
             })
 
@@ -243,7 +244,7 @@ def message(request):
             result_text += '* 승강장에 화장실이 있음\n? 운임구역에 있는지 불확실함\n'
             result_text += '(확실하면 건의해주시기 바랍니다.)\n\n'
             result_text += '역 이름 옆에 (1호선)처럼 타 노선이 붙어있는 경우는 '
-            result_text += '화장실에 들어가기 위해 환승이 요구되는 역입니다.\n\n'
+            result_text += '화장실에 들어가기 위해 환승이 요구되는 역입니다.\n\n--\n\n'
 
             for station in toilet_list[content_name]:
                 result_text += station + '  '
@@ -283,7 +284,8 @@ def message(request):
                     'text': ServiceErrorKakao
                 },
                 'keyboard': {
-                    'type': 'text'
+                    'type': 'buttons',
+                    'buttons': default_menu_btn
                 }
             })
 
