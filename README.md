@@ -158,8 +158,8 @@ server {
 }
 ```
 
-### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만듭니다.
-### Create a shortcut to the file in /etc/nginx/sites-enabled.
+### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만든 후 nginx가 제대로 설정됐는지 테스트합니다.
+### Create a shortcut to the file in /etc/nginx/sites-enabled, and test for configuration of nginx.
 ```
 $ sudo ln -s /etc/nginx/sites-available/MidnightGuideToHome /etc/nginx/sites-enabled
 $ sudo service nginx configtest
@@ -168,11 +168,11 @@ $ sudo service nginx configtest
 ### 11. mongoDB, Djongo, requests를 설치합니다.
 ### Install mongoDB, Djongo, and requests.
 ```
-sudo apt install mongodb
-cd /home/user
-source venv/bin/activate
-pip3 install djongo
-pip3 install requests
+$ sudo apt install mongodb
+$ cd /home/user
+$ source venv/bin/activate
+(venv) $ pip3 install djongo
+(venv) $ pip3 install requests
 ```
 (Djongo: Django의 mongoDB 연결을 수행함)
 
@@ -186,9 +186,9 @@ settings.py 파일을 수정하고(비밀 키 추가), tokens.py 파일을 만�
 Modify settings.py (add secret key), make tokens.py file and...
 
 ```
-$ sudo service mongodb start
-$ cd MidnightGuideToHome
-$ ./manage.py migrate
+(venv) $ sudo service mongodb start
+(venv) $ cd MidnightGuideToHome
+(venv) $ ./manage.py migrate
 ```
 
 비밀 키와 호스트를 MidnightGuideToHome/MidnightGuideToHome/settings.py의 ALLOWED_HOSTS에 추가해주세요.
