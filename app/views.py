@@ -406,7 +406,16 @@ def message(request):
         cur_serv.save()
         return JsonResponse({
             'message': {
-                'text': PaidToiletServiceKakao
+                'text': PaidToiletServiceKakao,
+                'photo': {
+                    # url form:
+                    # http://<host>/static/Toilet.jpg
+                    #
+                    'url': 'http://' + request.get_host() + \
+                    '/static/Toilet.jpg',
+                    'width': 720,
+                    'height': 960
+                }
             },
             'keyboard': {
                 'type': 'buttons',
