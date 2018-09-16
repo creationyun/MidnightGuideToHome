@@ -143,10 +143,8 @@ StandardError=syslog
 WantedBy=multi-user.target
 ```
 
-### 9. nginx를 설치하고 /etc/nginx/sites-available 디렉토리에
-### MidnightGuideToHome 파일을 생성합니다.
-### Install nginx, and generate MidnightGuideToHome file in
-### /etc/nginx/sites-available.
+### 9. nginx를 설치하고 /etc/nginx/sites-available 디렉토리에 MidnightGuideToHome 파일을 생성합니다.
+### Install nginx, and generate MidnightGuideToHome file in /etc/nginx/sites-available.
 ```
 $ sudo apt install nginx
 $ sudo nano /etc/nginx/sites-available/MidnightGuideToHome
@@ -168,13 +166,11 @@ server {
 }
 ```
 
-### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만든 후
-### nginx가 제대로 설정됐는지 테스트합니다.
-### Create a shortcut to the file in /etc/nginx/sites-enabled,
-### and test for configuration of nginx.
+### 10. /etc/nginx/sites-enabled에 해당 파일의 바로가기를 만든 후 nginx가 제대로 설정됐는지 테스트합니다.
+### Create a shortcut to the file in /etc/nginx/sites-enabled, and test for configuration of nginx.
 ```
 $ sudo ln -s /etc/nginx/sites-available/MidnightGuideToHome /etc/nginx/sites-enabled
-$ sudo service nginx configtest
+$ sudo nginx -t
 ```
 
 ### 11. mongoDB, Djongo, requests를 설치합니다.
@@ -198,7 +194,7 @@ settings.py 파일을 수정하고(비밀 키 추가), tokens.py 파일을 만�
 Modify settings.py (add secret key), make tokens.py file and...
 
 ```
-(venv) $ sudo service mongodb start
+(venv) $ sudo systemctl start mongodb
 (venv) $ cd MidnightGuideToHome
 (venv) $ ./manage.py migrate
 ```
