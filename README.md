@@ -18,6 +18,14 @@ KakaoTalk Plusfriend service.
 Django app_fb is collected functions required to operate the
 Facebook chatbot service.
 
+## lib.py
+서비스를 운영하는데 필요한 라이브러리 파이썬 파일입니다.
+각종 메서드, 서비스 안내문 (문자열 변수), 소규모 정적 데이터베이스 등을 모아놓았습니다.
+
+It is a library Python file required to operate the service.
+Various methods, service announcements (string variables), small static database,
+and so on.
+
 ## static
 이미지, admin 페이지 css, js 파일 등을 관리하는 장고 static 파일입니다.
 
@@ -29,8 +37,12 @@ of the admin page, etc.
 It contains images used by Midnight Guide To Home requests.
 
 ## 필요한 구성요소 (Required Components)
-Linux (Ubuntu, Debian, etc.), Python 3, Django 2.1, uWSGI, nginx,
+Linux (Ubuntu, Debian, etc.), Python 3.6 or more, Django 2.1, uWSGI, nginx,
 MongoDB (+pymongo, djongo)
+
+settings.py 파일을 수정한 후에, 다른 데이터베이스 모듈을 사용할 수도 있습니다.
+
+After modifying settings.py file, you can also use the other database module.
 
 ## 별도로 추가해야 할 파일 (Files to Add Separately)
 
@@ -40,14 +52,19 @@ settings_secret_removed.py 파일에서 `SECRET_KEY` 등을 추가해서
 
 In settings_secret_removed.py file, add `SECRET_KEY`, etc.,
 and change the name back to its original name, settings.py.
+
 ### tokens.py
+다음과 같이 2개의 문자열 변수를 지정해주면 됩니다. 페이스북 챗봇 운영시 반드시 필요합니다.
+
+You can specify two string variables as follows. It is absolutely necessary to operate Facebook chatbot.
+
 ```
 PAGE_ACCESS_TOKEN = Own Facebook Page Access Token
 VERIFY_TOKEN = Verification Token for Callback URL
 ```
 
 ## 설치 과정 (Installation Process)
-(우분투 기준, Based on Ubuntu)
+(우분투 18.04 기준, Based on Ubuntu 18.04)
 ### 1. 업데이트 후 Python 3의 pip를 설치합니다.
 ### After updates, and install pip of Python 3.
 ```

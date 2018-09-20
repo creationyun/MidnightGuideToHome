@@ -13,8 +13,8 @@ from lib import *
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
 #
 default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀가안내 미리 확인',
-'5호선 - 4호선 환승방법 안내', '서울 심야버스 알아보기', '지하철 운임구역 화장실 알아보기',
-'서비스 이용 규칙', '개인정보 처리방침', '서울 1~9호선 통학통근러 오픈채팅방']
+'서울 심야버스 알아보기', '지하철 운임구역 화장실 알아보기', '서비스 이용 규칙',
+'개인정보 처리방침', '서울 1~9호선 통학통근러 오픈채팅방']
 
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
@@ -55,7 +55,7 @@ def message(request):
 
     # 사용자가 보낸 값이 텍스트가 아니라면
     if type_name != 'text':
-        cur_serv.dhcp_status = False
+        # cur_serv.dhcp_status = False
         cur_serv.nightbus_status = False
         cur_serv.paidtoilet_status = False
         cur_serv.save()
@@ -69,6 +69,7 @@ def message(request):
             }
         })
 
+    '''
     ################# 5호선 - 4호선 환승안내 자동화 코드 #################
     if cur_serv.dhcp_status:
         # 출발지 / 목적지 형식으로 입력했다면...
@@ -150,9 +151,9 @@ def message(request):
                     'type': 'text'
                 }
             })
-
+    '''
     ################# 서울 심야버스 알아보기 자동화 코드 #################
-    elif cur_serv.nightbus_status:
+    if cur_serv.nightbus_status:
         # 입력값이 서울 자치구를 선택했다면...
         if content_name in seoul_districts:
             # 현재 사용자의 요청을 받아들인다. (Reset)
@@ -205,7 +206,7 @@ def message(request):
             })
         # 취소 버튼이 아니면 에러를 띄운다.
         else:
-            cur_serv.dhcp_status = False
+            # cur_serv.dhcp_status = False
             cur_serv.nightbus_status = False
             cur_serv.paidtoilet_status = False
             cur_serv.save()
@@ -275,7 +276,7 @@ def message(request):
             })
         # 취소 버튼이 아니면 에러를 띄운다.
         else:
-            cur_serv.dhcp_status = False
+            # cur_serv.dhcp_status = False
             cur_serv.nightbus_status = False
             cur_serv.paidtoilet_status = False
             cur_serv.save()
@@ -358,7 +359,7 @@ def message(request):
                 'buttons': ['상담 취소/완료']
             }
         })
-
+    '''
     ################# 5호선 - 4호선 환승방법 안내 #################
     elif menu_idx == 2:
         cur_serv.dhcp_status = True
@@ -378,9 +379,10 @@ def message(request):
                 'type': 'text'
             }
         })
+    '''
 
     ################# 서울 심야버스 알아보기 #################
-    elif menu_idx == 3:
+    elif menu_idx == 2:
         cur_serv.nightbus_status = True
         cur_serv.save()
         return JsonResponse({
@@ -401,7 +403,7 @@ def message(request):
         })
 
     ################# 지하철 운임구역 화장실 알아보기 #################
-    elif menu_idx == 4:
+    elif menu_idx == 3:
         cur_serv.paidtoilet_status = True
         cur_serv.save()
         return JsonResponse({
@@ -424,7 +426,7 @@ def message(request):
         })
 
     ################# 서비스 이용 규칙 #################
-    elif menu_idx == 5:
+    elif menu_idx == 4:
         return JsonResponse({
             'message': {
                 'text': '서비스 이용 규칙입니다.',
@@ -440,7 +442,7 @@ def message(request):
         })
 
     ################# 개인정보 처리방침 #################
-    elif menu_idx == 6:
+    elif menu_idx == 5:
         return JsonResponse({
             'message': {
                 'text': '개인정보 처리방침입니다.',
@@ -456,7 +458,7 @@ def message(request):
         })
 
     ################# 통학통근러 오픈채팅방 #################
-    elif menu_idx == 7:
+    elif menu_idx == 6:
         return JsonResponse({
             'message': {
                 'text': '서울 1~9호선 통학통근러 오픈채팅방',
@@ -529,7 +531,7 @@ def friend_leave(request, user_key):
         # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 기본값으로 변경한다.
         try:
             cur_serv = KakaoService.objects.get(user=user_key)
-            cur_serv.dhcp_status = False
+            # cur_serv.dhcp_status = False
             cur_serv.nightbus_status = False
             cur_serv.paidtoilet_status = False
             cur_serv.save()
