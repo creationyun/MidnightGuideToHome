@@ -359,7 +359,7 @@ def message(request):
                 'buttons': ['상담 취소/완료']
             }
         })
-    '''
+        '''
     ################# 5호선 - 4호선 환승방법 안내 #################
     elif menu_idx == 2:
         cur_serv.dhcp_status = True
@@ -379,7 +379,7 @@ def message(request):
                 'type': 'text'
             }
         })
-    '''
+        '''
 
     ################# 서울 심야버스 알아보기 #################
     elif menu_idx == 2:

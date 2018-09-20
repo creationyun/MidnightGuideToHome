@@ -8,7 +8,7 @@ import pprint
 import requests
 import datetime
 from lib import *
-from .models import FacebookDHCPService
+# from .models import FacebookDHCPService
 from django.core.exceptions import ObjectDoesNotExist
 # tokens.py는 보안상 github에 업로드하지 않았다.
 from tokens import PAGE_ACCESS_TOKEN, VERIFY_TOKEN
@@ -230,7 +230,7 @@ class BotView(generic.View):
         incoming_message = json.loads(self.request.body.decode('utf-8'))
         for entry in incoming_message['entry']:
             for message in entry['messaging']:
-"""
+                """
                 # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 불러온다.
                 try:
                     cur_dhcp = FacebookDHCPService.objects.get(
@@ -241,12 +241,12 @@ class BotView(generic.View):
                         fbid=message['sender']['id'], status=False
                     )
                     cur_dhcp.save()  # 데이터베이스 반영
-"""
+                """
                 # 일반적인 사용자의 message 양식
                 if 'message' in message:
                     print('message: ' + str(message))  # 디버그용
 
-"""
+                    """
                     # 만약 동대문역사문화공원역 5호선-4호선 환승방법 안내 요청이 On이고
                     # 메시지 내용에 슬래시(/)가 포함되어 있으면
                     # 올바른 안내 요청을 한 것으로 승인한다.
@@ -311,7 +311,7 @@ Sookmyung Women's University (숙대입구) ~ Ssangmun (쌍문)
 Please re-enter the starting point and destination according to the format:
 Starting point / Destination'''}
                         })
-"""
+                    """
                     # '메뉴'를 입력했으면 메뉴를 띄워준다.
                     if message['message']['text'] == '메뉴' or \
                     message['message']['text'] == 'menu':
