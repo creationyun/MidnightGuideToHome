@@ -20,6 +20,7 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('web/', views.web_index),
     re_path(r'^keyboard$', views.keyboard),
     re_path(r'^message$', views.message),
     re_path(r'^friend/(?P<user_key>[\w-]+)$', views.friend_block),

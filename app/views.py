@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
-from .models import KakaoService
+# from django.template import loader
+from .models import KakaoService, WebGuideRequests
 import json
 import datetime
 from lib import *
@@ -558,3 +559,8 @@ def image_load(request, image_name):
     images.append(image_data_)
 
     return HttpResponse(images, content_type="image/jpg")
+
+#################***************** 첫 페이지 *****************#################
+def web_index(request):
+    guideRequests = WebGuideRequests.objects.all()
+    return render(request, 'web/index.html', {'requests': guideRequests})

@@ -8,3 +8,10 @@ class KakaoService(models.Model):
     # dhcp_status = models.BooleanField(default=False)
     nightbus_status = models.BooleanField(default=False)
     paidtoilet_status = models.BooleanField(default=False)
+
+class WebGuideRequests(models.Model):
+    user = models.CharField(max_length=100)
+    request_time = models.DateTimeField(auto_now=True)
+    startpoint = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
+    finished = models.BooleanField(default=False)
