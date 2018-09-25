@@ -27,15 +27,23 @@ def keyboard(response):
 #################***************** 챗봇 메시지 *****************#################
 @csrf_exempt
 def message(request):
+    # 올바른 POST 요청이 맞는지 검증
+    if request.method != 'POST':
+        return HttpResponse('Wrong request.')
+
     # 카카오 서버로부터 받은 JSON request에서 데이터를 추출한다.
     json_str = (request.body).decode('utf-8')
     received_json = json.loads(json_str)  # JSON 파일 디코딩
-    content_name = received_json['content']
 
-    user_name = received_json['user_key']
-    # user_name은 사용자를 구별하기 위해 사용됨
-    type_name = received_json['type']
-    # type_name은 사용자가 보낸 값의 속성을 구별(text, photo 등)
+    try:
+        # content_name은 요청된 메시지 판별에 사용됨
+        content_name = received_json['content']
+        # user_name은 사용자를 구별하기 위해 사용됨
+        user_name = received_json['user_key']
+        # type_name은 사용자가 보낸 값의 속성을 구별(text, photo 등)
+        type_name = received_json['type']
+    except KeyError:
+        return HttpResponse('Wrong request.')
 
     # 메시지를 메뉴 버튼 리스트에 대응하여 인덱스를 찾기
     # 찾지 못하면 -1이 된다.
