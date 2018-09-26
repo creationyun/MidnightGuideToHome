@@ -564,3 +564,7 @@ def image_load(request, image_name):
 def web_index(request):
     guideRequests = WebGuideRequests.objects.all()
     return render(request, 'web/index.html', {'requests': guideRequests})
+
+#################***************** 요청 페이지 *****************#################
+def web_guide_request(request):
+    return render(request, 'web/guide_request.html', {})

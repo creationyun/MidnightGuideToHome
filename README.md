@@ -7,10 +7,10 @@ Midnight Guide To Home Service chatbot software is a free software.
 (Used GPLv3, see LICENSE file.)
 
 ## app
-카카오톡 플러스친구 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
+카카오톡 플러스친구와 웹 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
 
 Django app is collected functions required to operate the
-KakaoTalk Plusfriend service.
+KakaoTalk Plusfriend and web services.
 
 ## app_fb
 페이스북 챗봇 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.

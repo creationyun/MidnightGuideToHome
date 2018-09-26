@@ -20,12 +20,12 @@ from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('web/', views.web_index),
+    path('web/', include('app.web_urls')),
     re_path(r'^keyboard$', views.keyboard),
     re_path(r'^message$', views.message),
     re_path(r'^friend/(?P<user_key>[\w-]+)$', views.friend_block),
     re_path(r'^friend$', views.friend_add),
     re_path(r'^chat_room/(?P<user_key>[\w-]+)$', views.friend_leave),
     re_path(r'^(?P<image_name>media/[\w-]+.*)$', views.image_load),
-    re_path(r'^fb_app/', include('app_fb.urls')),
+    path('fb_app/', include('app_fb.urls')),
 ]
