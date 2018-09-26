@@ -567,4 +567,11 @@ def web_index(request):
 
 #################***************** 요청 페이지 *****************#################
 def web_guide_request(request):
-    return render(request, 'web/guide_request.html', {})
+    content = {}
+    if request.method == 'POST':
+        name = request.POST['InputName']
+        start = request.POST['InputStartpoint']
+        dest = request.POST['InputDestination']
+        WebGuideRequests.objects.create(user=name, startpoint=start, destination=dest)
+        content['success'] = True
+    return render(request, 'web/guide_request.html', content)

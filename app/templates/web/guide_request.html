@@ -51,7 +51,13 @@
   <hr/>
   <div class="container-fluid">
     <h2>귀가 요청</h2>
-    <form>
+    {% if success %}
+    <div class="alert alert-success" role="alert">
+      요청이 완료되었습니다. 잠시만 기다려주세요!
+    </div>
+    {% endif %}
+    <form action="" method="post">
+      {% csrf_token %}
       <div class="form-group">
         <label for="InputName">이름</label>
         <input type="text" class="form-control" id="InputName" placeholder="이름 입력">
