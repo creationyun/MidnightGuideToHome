@@ -56,19 +56,19 @@
       요청이 완료되었습니다. 잠시만 기다려주세요!
     </div>
     {% endif %}
-    <form action="" method="post">
+    <form action="." method="post">
       {% csrf_token %}
       <div class="form-group">
         <label for="InputName">이름</label>
-        <input type="text" class="form-control" id="InputName" placeholder="이름 입력">
+        <input type="text" class="form-control" id="InputName" name="input_name" placeholder="이름 입력">
       </div>
       <div class="form-group">
         <label for="InputStartpoint">출발지</label>
-        <input type="text" class="form-control" id="InputStartpoint" placeholder="출발지 입력">
+        <input type="text" class="form-control" id="InputStartpoint" name="input_startpoint" placeholder="출발지 입력">
       </div>
       <div class="form-group">
         <label for="InputDestination">목적지</label>
-        <input type="text" class="form-control" id="InputDestination" placeholder="목적지 입력">
+        <input type="text" class="form-control" id="InputDestination" name="input_destination" placeholder="목적지 입력">
       </div>
       <button type="submit" class="btn btn-primary">요청하기</button>
     </form>

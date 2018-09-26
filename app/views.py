@@ -569,9 +569,9 @@ def web_index(request):
 def web_guide_request(request):
     content = {}
     if request.method == 'POST':
-        name = request.POST['InputName']
-        start = request.POST['InputStartpoint']
-        dest = request.POST['InputDestination']
+        name = request.POST['input_name']
+        start = request.POST['input_startpoint']
+        dest = request.POST['input_destination']
         WebGuideRequests.objects.create(user=name, startpoint=start, destination=dest)
         content['success'] = True
     return render(request, 'web/guide_request.html', content)

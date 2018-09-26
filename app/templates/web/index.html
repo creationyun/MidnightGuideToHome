@@ -59,6 +59,7 @@
           <th>출발지</th>
           <th>목적지</th>
           <th>요청 날짜</th>
+          <th>요청 결과</th>
         </tr>
       </thead>
       <tbody>
@@ -69,6 +70,11 @@
           <td>{{ r.startpoint }}</td>
           <td>{{ r.destination }}</td>
           <td>{{ r.request_time }}</td>
+          <td>
+          {% if r.finished %}완료
+          {% else %}진행중
+          {% endif %}
+          </td>
         </tr>
         {% endfor %}
     </table>
