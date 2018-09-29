@@ -51,10 +51,16 @@
   <hr/>
   <div class="container-fluid">
     <h2>귀가 요청</h2>
-    {% if success %}
-    <div class="alert alert-success" role="alert">
-      요청이 완료되었습니다. 잠시만 기다려주세요!
-    </div>
+    {% if req_try %}
+      {% if success %}
+      <div class="alert alert-success" role="alert">
+        {{ req_message }}
+      </div>
+      {% else %}
+      <div class="alert alert-danger" role="alert">
+        {{ req_message }}
+      </div>
+      {% endif %}
     {% endif %}
     <form action="." method="post">
       {% csrf_token %}
