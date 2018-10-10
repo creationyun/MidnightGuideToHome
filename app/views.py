@@ -549,6 +549,7 @@ def friend_leave(request, user_key):
             cur_serv.save()
     return HttpResponse()
 
+'''
 #################***************** 이미지 로딩 *****************#################
 def image_load(request, image_name):
     link = image_name
@@ -559,11 +560,16 @@ def image_load(request, image_name):
     images.append(image_data_)
 
     return HttpResponse(images, content_type="image/jpg")
+'''
 
 #################***************** 첫 페이지 *****************#################
 def web_index(request):
+    return render(request, 'web/index.html', {})
+
+###############***************** 요청 뷰 페이지 *****************###############
+def web_request_view(request):
     guideRequests = WebGuideRequests.objects.all()
-    return render(request, 'web/index.html', {'requests': guideRequests})
+    return render(request, 'web/request_view.html', {'requests': guideRequests})
 
 #################***************** 요청 페이지 *****************#################
 def web_guide_request(request):

@@ -31,10 +31,10 @@
         <li class="nav-item">
           <a class="nav-link" href="/web">홈</a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href=".">요청하기 <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link" href="/web/guide_request">요청하기</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown active">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             요청 결과 확인 (관리자용)
           </a>
@@ -42,7 +42,7 @@
             <a class="dropdown-item" href="#">진행 중인 요청</a>
             <a class="dropdown-item" href="#">완료된 요청</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/request_view">모든 요청</a>
+            <a class="dropdown-item" href=".">모든 요청 <span class="sr-only">(current)</span></a>
           </div>
         </li>
       </ul>
@@ -50,34 +50,35 @@
   </nav>
   <hr/>
   <div class="container-fluid">
-    <h2>귀가 요청</h2>
-    {% if req_try %}
-      {% if success %}
-      <div class="alert alert-success" role="alert">
-        {{ req_message }}
-      </div>
-      {% else %}
-      <div class="alert alert-danger" role="alert">
-        {{ req_message }}
-      </div>
-      {% endif %}
-    {% endif %}
-    <form action="." method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="InputName">이름</label>
-        <input type="text" class="form-control" id="InputName" name="input_name" placeholder="이름 입력">
-      </div>
-      <div class="form-group">
-        <label for="InputStartpoint">출발지</label>
-        <input type="text" class="form-control" id="InputStartpoint" name="input_startpoint" placeholder="출발지 입력">
-      </div>
-      <div class="form-group">
-        <label for="InputDestination">목적지</label>
-        <input type="text" class="form-control" id="InputDestination" name="input_destination" placeholder="목적지 입력">
-      </div>
-      <button type="submit" class="btn btn-primary">요청하기</button>
-    </form>
+    <h2> 요청 결과입니다. </h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">번호</th>
+          <th scope="col">요청자</th>
+          <th scope="col">출발지</th>
+          <th scope="col">목적지</th>
+          <th scope="col">요청 날짜</th>
+          <th scope="col">요청 결과</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <th scope="row">{{ r.id }}</td>
+          <td>{{ r.user }}</td>
+          <td>{{ r.startpoint }}</td>
+          <td>{{ r.destination }}</td>
+          <td>{{ r.request_time }}</td>
+          <td>
+          {% if r.finished %}완료
+          {% else %}진행중
+          {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
