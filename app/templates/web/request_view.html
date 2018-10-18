@@ -49,9 +49,9 @@
     </div>
   </nav>
   <hr/>
-  <div class="container-fluid">
+  <div class="container-fluid table-responsive">
     <h2> 요청 결과입니다. </h2>
-    <table class="table">
+    <table class="table table-hover">
       <thead>
         <tr>
           <th scope="col">번호</th>
@@ -64,8 +64,8 @@
       </thead>
       <tbody>
         {% for r in requests %}
-        <tr>
-          <th scope="row">{{ r.id }}</td>
+        <tr onclick="window.location='#';">
+          <th scope="row">{{ r.id }}</th>
           <td>{{ r.user }}</td>
           <td>{{ r.startpoint }}</td>
           <td>{{ r.destination }}</td>

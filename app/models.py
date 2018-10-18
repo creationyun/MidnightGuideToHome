@@ -14,5 +14,9 @@ class WebGuideRequests(models.Model):
     request_time = models.DateTimeField(auto_now=True)
     startpoint = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
-    #request_content = models.TextField(blank=True)
     finished = models.BooleanField(default=False)
+
+class WebGuideReplies(models.Model):
+    reply_time = models.DateTimeField(auto_now=True)
+    request_id = models.IntegerField()
+    reply_content = models.TextField(blank=True)

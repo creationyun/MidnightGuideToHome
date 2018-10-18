@@ -20,6 +20,9 @@ default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
 def keyboard(response):
+    if not 'KakaoTalk/Bot' in response.META['HTTP_USER_AGENT']:
+        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+
     return JsonResponse({
         'type': 'buttons',
         'buttons': default_menu_btn
