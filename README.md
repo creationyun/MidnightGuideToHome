@@ -54,13 +54,14 @@ In settings_secret_removed.py file, add `SECRET_KEY`, etc.,
 and change the name back to its original name, settings.py.
 
 ### tokens.py
-다음과 같이 2개의 문자열 변수를 지정해주면 됩니다. 페이스북 챗봇 운영시 반드시 필요합니다.
+다음과 같이 3개의 문자열 변수를 지정해주면 됩니다. 챗봇 운영시 반드시 필요합니다.
 
-You can specify two string variables as follows. It is absolutely necessary to operate Facebook chatbot.
+You can specify 3 string variables as follows. It is absolutely necessary to operate chatbot.
 
 ```
 PAGE_ACCESS_TOKEN = Own Facebook Page Access Token
 VERIFY_TOKEN = Verification Token for Callback URL
+ACCESS_USER_AGENT = Verification User Agent for KakaoTalk Chatbot
 ```
 
 ## 설치 과정 (Installation Process)

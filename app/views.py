@@ -9,6 +9,8 @@ from .models import KakaoService, WebGuideRequests
 import json
 import datetime
 from lib import *
+# tokens.py는 보안상 github에 업로드하지 않았다.
+from tokens import ACCESS_USER_AGENT
 
 #### 데이터베이스 Databases ####
 # default_menu_btn: 카카오톡 메뉴 버튼에 사용되는 변수형 데이터
@@ -20,7 +22,8 @@ default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
 def keyboard(response):
-    if not 'KakaoTalk/Bot' in response.META['HTTP_USER_AGENT']:
+    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
+    if not ACCESS_USER_AGENT in response.META['HTTP_USER_AGENT']:
         return HttpResponse('This service is only accessable on KakaoTalk bot.')
 
     return JsonResponse({
@@ -31,6 +34,10 @@ def keyboard(response):
 #################***************** 챗봇 메시지 *****************#################
 @csrf_exempt
 def message(request):
+    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
+    if not ACCESS_USER_AGENT in request.META['HTTP_USER_AGENT']:
+        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+
     # 올바른 POST 요청이 맞는지 검증
     if request.method != 'POST':
         return HttpResponse('Wrong request.')
@@ -512,6 +519,10 @@ def message(request):
 ###############*************** 친구 추가/차단 알림 ***************###############
 @csrf_exempt
 def friend_add(request):
+    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
+    if not ACCESS_USER_AGENT in request.META['HTTP_USER_AGENT']:
+        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+
     # 카카오 서버로부터 받은 JSON request에서 데이터를 추출한다.
     json_str = (request.body).decode('utf-8')
     received_json = json.loads(json_str)  # JSON 파일 디코딩
@@ -527,6 +538,10 @@ def friend_add(request):
 
 @csrf_exempt
 def friend_block(request, user_key):
+    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
+    if not ACCESS_USER_AGENT in request.META['HTTP_USER_AGENT']:
+        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+
     if request.method == 'DELETE':
         # 사용자 키가 데이터베이스에 없다면 아무런 동작을 하지 않고, 있으면 삭제한다.
         try:
@@ -539,6 +554,10 @@ def friend_block(request, user_key):
 ###############*************** 채팅방 나가기 알림 ***************###############
 @csrf_exempt
 def friend_leave(request, user_key):
+    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
+    if not ACCESS_USER_AGENT in request.META['HTTP_USER_AGENT']:
+        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+
     if request.method == 'DELETE':
         # 사용자 키가 데이터베이스에 없다면 생성하고, 있으면 기본값으로 변경한다.
         try:
