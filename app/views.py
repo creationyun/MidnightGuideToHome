@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import KakaoService, WebGuideRequests
 import json
 import datetime
-from lib import *
+from static_lib import *
 # tokens.py는 보안상 github에 업로드하지 않았다.
 from tokens import ACCESS_USER_AGENT
 

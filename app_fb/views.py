@@ -7,7 +7,7 @@ import json
 import pprint
 import requests
 import datetime
-from lib import *
+from static_lib import *
 # from .models import FacebookDHCPService
 from django.core.exceptions import ObjectDoesNotExist
 # tokens.py는 보안상 github에 업로드하지 않았다.
