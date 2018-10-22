@@ -22,10 +22,6 @@ default_menu_btn = ['자정/심야시간 귀가안내', '자정/심야시간 귀
 #################***************** 키보드 요청시 *****************################
 @csrf_exempt
 def keyboard(response):
-    # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
-    if not ACCESS_USER_AGENT in response.META['HTTP_USER_AGENT']:
-        return HttpResponse('This service is only accessable on KakaoTalk bot.')
-
     return JsonResponse({
         'type': 'buttons',
         'buttons': default_menu_btn
@@ -36,7 +32,15 @@ def keyboard(response):
 def message(request):
     # 카카오톡 봇 외의 다른 User Agent의 진입을 차단
     if not ACCESS_USER_AGENT in request.META['HTTP_USER_AGENT']:
-        return HttpResponse('This service is only accessable on KakaoTalk bot.')
+        return JsonResponse({
+            'message': {
+                'text': '올바른 카카오톡 챗봇 요청이 아닙니다.'
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
 
     # 올바른 POST 요청이 맞는지 검증
     if request.method != 'POST':
@@ -54,7 +58,15 @@ def message(request):
         # type_name은 사용자가 보낸 값의 속성을 구별(text, photo 등)
         type_name = received_json['type']
     except KeyError:
-        return HttpResponse('Wrong request.')
+        return JsonResponse({
+            'message': {
+                'text': 'JSON 형식이 잘못되었습니다. 다시 시도해주십시오.'
+            },
+            'keyboard': {
+                'type': 'buttons',
+                'buttons': default_menu_btn
+            }
+        })
 
     # 메시지를 메뉴 버튼 리스트에 대응하여 인덱스를 찾기
     # 찾지 못하면 -1이 된다.

@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.shortcuts import redirect
 from app import views
 
 urlpatterns = [
+    path('', lambda request: redirect('/web/', permanent=False)),
     path('admin/', admin.site.urls),
     path('web/', include('app.web_urls')),
     re_path(r'^keyboard$', views.keyboard),
