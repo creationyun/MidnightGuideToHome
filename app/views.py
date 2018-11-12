@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 # from django.template import loader
@@ -604,6 +604,24 @@ def web_index(request):
 def web_request_view(request):
     guideRequests = WebGuideRequests.objects.all()
     return render(request, 'web/request_view.html', {'requests': guideRequests})
+
+###############************** 요청 detail 페이지 **************###############
+def web_request_detail(request, req_id):
+    try:
+        guideRequest = WebGuideRequests.objects.get(id=req_id)
+    except ObjectDoesNotExist:
+        raise Http404("404 Not Found. Cannot find this id...")
+
+    rep_content = '아직 답변이 없습니다. 잠시만 기다려주세요.'
+    try:
+        reply = WebGuideReplies.objects.get(request_id=req_id)
+        rep_content = reply.reply_content
+    except ObjectDoesNotExist:
+        pass
+
+    return render(request, 'web/request_detail.html', {
+        'req': guideRequest, 'reply_content': rep_content
+    })
 
 #################***************** 요청 페이지 *****************#################
 def web_guide_request(request):
