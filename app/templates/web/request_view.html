@@ -64,7 +64,7 @@
       </thead>
       <tbody>
         {% for r in requests %}
-        <tr onclick="window.location='#';">
+        <tr onclick="window.location='{{ r.id }}';">
           <th scope="row">{{ r.id }}</th>
           <td>{{ r.user }}</td>
           <td>{{ r.startpoint }}</td>

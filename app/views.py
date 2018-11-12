@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 # from django.template import loader
-from .models import KakaoService, WebGuideRequests
+from .models import KakaoService, WebGuideRequests, WebGuideReplies
 import json
 import datetime
 from static_lib import *
