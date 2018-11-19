@@ -76,12 +76,34 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      {{ reply_content }}
+
+    {% if reply_notfound %}
+    <div class="card">
+      <div class="card-body">
+        아직 답변이 없습니다. 잠시만 기다려주세요.
+      </div>
     </div>
+    {% else %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">답변 번호</th>
+          <th scope="col">답변 시간</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{{ rep.id }}</th>
+          <td>{{ rep.reply_time }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">{{ rep.reply_content }}</td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
   </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="/static/web_service/js/bootstrap.min.js"></script>
 </body>

@@ -11,12 +11,12 @@ class KakaoService(models.Model):
 
 class WebGuideRequests(models.Model):
     user = models.CharField(max_length=100)
-    request_time = models.DateTimeField(auto_now=True)
+    request_time = models.DateTimeField(auto_now_add=True)
     startpoint = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     finished = models.BooleanField(default=False)
 
 class WebGuideReplies(models.Model):
-    reply_time = models.DateTimeField(auto_now=True)
+    reply_time = models.DateTimeField(auto_now_add=True)
     request_id = models.IntegerField()
     reply_content = models.TextField(blank=True)

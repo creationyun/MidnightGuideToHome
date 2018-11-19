@@ -607,20 +607,23 @@ def web_request_view(request):
 
 ###############************** 요청 detail 페이지 **************###############
 def web_request_detail(request, req_id):
+    # 해당 id에 맞는 요청 객체 불러오기
     try:
         guideRequest = WebGuideRequests.objects.get(id=req_id)
     except ObjectDoesNotExist:
         raise Http404("404 Not Found. Cannot find this id...")
 
-    rep_content = '아직 답변이 없습니다. 잠시만 기다려주세요.'
+    # 답변 내용 불러오기
+    replyNotFound = False
     try:
         reply = WebGuideReplies.objects.get(request_id=req_id)
-        rep_content = reply.reply_content
     except ObjectDoesNotExist:
-        pass
+        reply = None
+        replyNotFound = True
 
+    # 페이지 렌더링
     return render(request, 'web/request_detail.html', {
-        'req': guideRequest, 'reply_content': rep_content
+        'req': guideRequest, 'rep': reply, 'reply_notfound': replyNotFound
     })
 
 #################***************** 요청 페이지 *****************#################
