@@ -601,8 +601,16 @@ def web_index(request):
     return render(request, 'web/index.html', {})
 
 ###############***************** 요청 뷰 페이지 *****************###############
-def web_request_view(request):
-    guideRequests = WebGuideRequests.objects.all()
+def web_request_view(request, condition):
+    if condition == '':
+        guideRequests = WebGuideRequests.objects.all()
+    elif condition == 'process':
+        guideRequests = WebGuideRequests.objects.filter(finished=False)
+    elif condition == 'complete':
+        guideRequests = WebGuideRequests.objects.filter(finished=True)
+    else:
+        raise Http404("404 Not Found. %s is not available" % condition)
+        
     return render(request, 'web/request_view.html', {'requests': guideRequests})
 
 ###############************** 요청 detail 페이지 **************###############
