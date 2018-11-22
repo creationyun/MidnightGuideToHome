@@ -602,15 +602,15 @@ def web_index(request):
 
 ###############***************** 요청 뷰 페이지 *****************###############
 def web_request_view(request, condition):
-    if condition == '':
+    if condition == 'all':  # 모든 요청
         guideRequests = WebGuideRequests.objects.all()
-    elif condition == 'process':
+    elif condition == 'process':  # 진행 중인 요청
         guideRequests = WebGuideRequests.objects.filter(finished=False)
-    elif condition == 'complete':
+    elif condition == 'complete':  # 완료된 요청
         guideRequests = WebGuideRequests.objects.filter(finished=True)
     else:
         raise Http404("404 Not Found. %s is not available" % condition)
-        
+
     return render(request, 'web/request_view.html', {'requests': guideRequests})
 
 ###############************** 요청 detail 페이지 **************###############
