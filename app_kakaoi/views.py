@@ -5,14 +5,14 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import urllib
 
-ver = "1.0"
+ver = "2.0"
 
 @csrf_exempt
 def kakaoi_findpath(request):
 	# 올바른 POST 요청이 맞는지 검증
     if request.method != 'POST':
         return HttpResponse('Wrong request.')
-	
+
     # 카카오 서버로부터 받은 JSON request에서 데이터를 추출한다.
     json_str = (request.body).decode('utf-8')
     received_json = json.loads(json_str)  # JSON 파일 디코딩
