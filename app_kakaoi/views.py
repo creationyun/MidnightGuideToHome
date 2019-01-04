@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import urllib
 
+ver = "1.0"
+
 @csrf_exempt
 def kakaoi_findpath(request):
 	# 올바른 POST 요청이 맞는지 검증
@@ -21,7 +23,7 @@ def kakaoi_findpath(request):
         req_dest = received_json['action']['params']['location_dest']
     except KeyError:
         return JsonResponse({
-            "version": "2.0",
+            "version": ver,
             "template": {
                 "output": [
                     {
@@ -42,7 +44,7 @@ def kakaoi_findpath(request):
     }
 
     return JsonResponse({
-        "version": "2.0",
+        "version": ver,
         "template": {
             "output": [
                 {

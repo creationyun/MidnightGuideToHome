@@ -3,5 +3,5 @@ from django.urls import path, re_path
 from .views import *
 
 urlpatterns = [
-    path('findpath/', kakaoi_findpath)
+    re_path(r'^findpath$', kakaoi_findpath)
 ]
