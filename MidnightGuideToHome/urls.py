@@ -30,4 +30,5 @@ urlpatterns = [
     re_path(r'^chat_room/(?P<user_key>[\w-]+)$', views.friend_leave),
     #re_path(r'^(?P<image_name>media/[\w-]+.*)$', views.image_load),
     path('fb_app/', include('app_fb.urls')),
+    path('kakaoi/', include('app_kakaoi.urls')),
 ]

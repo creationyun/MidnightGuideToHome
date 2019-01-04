@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'app_fb',
+    'app_kakaoi',
 ]
 
 MIDDLEWARE = [
