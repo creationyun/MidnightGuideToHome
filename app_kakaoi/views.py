@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import urllib
+from static_lib import *
 
 ver = "2.0"
 
@@ -49,21 +50,16 @@ def kakaoi_findpath(request):
             "outputs": [
                 {
                     "simpleText": {
-                        "text":'''{0}에서 {1}까지 {2}에 귀가하는 경로입니다.
-
- 지금 바로 귀가하실 때, 다음 링크를 클릭해주시고 확인 부탁드립니다.
-(귀가 시간도 수동으로 설정 가능합니다.)
-https://www.google.com/maps/dir/?{3}
-
- 만약 택시비를 더 아끼고 싶거나, 결과가 마음에 들지 않을 경우
-혹은 더 자세한 안내를 받고 싶다면 상담원 연결 부탁드립니다.
-'''.format(req_origin, req_dest, req_time,
-urllib.parse.urlencode(google_maps_param))
+                        "text": MidnightGuideResultKakao.format(
+                            req_origin, req_dest, req_time, 
+                            urllib.parse.urlencode(google_maps_param))
                     }
                 }
             ]
         }
     })
+
+############################################################################
 
 '''
 블록 형식
