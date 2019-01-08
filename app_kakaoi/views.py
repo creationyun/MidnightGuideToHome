@@ -25,7 +25,7 @@ def kakaoi_findpath(request):
         return JsonResponse({
             "version": ver,
             "template": {
-                "output": [
+                "outputs": [
                     {
                         "simpleText": {
                             "text": "요청이 비정상적입니다. 관리자에게 문의해주세요."
@@ -46,7 +46,7 @@ def kakaoi_findpath(request):
     return JsonResponse({
         "version": ver,
         "template": {
-            "output": [
+            "outputs": [
                 {
                     "simpleText": {
                         "text":'''{0}에서 {1}까지 {2}에 귀가하는 경로입니다.

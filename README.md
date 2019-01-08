@@ -18,6 +18,12 @@ KakaoTalk Plusfriend and web services.
 Django app_fb is collected functions required to operate the
 Facebook chatbot service.
 
+## app_kakaoi
+카카오 i 오픈빌더 스킬을 운영하기 위해 필요한 기능들을 모은 장고 앱입니다.
+
+Django app_kakaoi is collected functions required to operate the Kakao i open
+builder skills.
+
 ## lib.py
 서비스를 운영하는데 필요한 라이브러리 파이썬 파일입니다.
 각종 메서드, 서비스 안내문 (문자열 변수), 소규모 정적 데이터베이스 등을 모아놓았습니다.
