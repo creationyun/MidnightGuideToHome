@@ -8,6 +8,7 @@ from static_lib import *
 
 ver = "2.0"
 
+#################***************** 경로 찾기 *****************#################
 @csrf_exempt
 def kakaoi_findpath(request):
 	# 올바른 POST 요청이 맞는지 검증
@@ -19,10 +20,15 @@ def kakaoi_findpath(request):
     received_json = json.loads(json_str)  # JSON 파일 디코딩
 
     try:
+        # req_time: 시간
+        # req_origin: 출발지
+        # req_dest: 목적지
+        #
         req_time = received_json['action']['params']['midnight_time']
         req_origin = received_json['action']['params']['location_origin']
         req_dest = received_json['action']['params']['location_dest']
     except KeyError:
+        # 비정상적인 JSON 요청
         return JsonResponse({
             "version": ver,
             "template": {
@@ -36,6 +42,7 @@ def kakaoi_findpath(request):
             }
         })
 
+    # 구글 지도 URL 파라미터
     google_maps_param = {
         # api=1&origin={}&destination={}&travelmode=transit
         "api": "1",
@@ -44,6 +51,7 @@ def kakaoi_findpath(request):
         "travelmode": "transit"
     }
 
+    # format에 맞춰서 JSON response를 보냄.
     return JsonResponse({
         "version": ver,
         "template": {
@@ -51,7 +59,7 @@ def kakaoi_findpath(request):
                 {
                     "simpleText": {
                         "text": MidnightGuideResultKakao.format(
-                            req_origin, req_dest, req_time, 
+                            req_origin, req_dest, req_time,
                             urllib.parse.urlencode(google_maps_param))
                     }
                 }
