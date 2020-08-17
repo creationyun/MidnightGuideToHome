@@ -11,7 +11,7 @@ ver = "2.0"
 #################***************** 경로 찾기 *****************#################
 @csrf_exempt
 def kakaoi_findpath(request):
-	# 올바른 POST 요청이 맞는지 검증
+    # 올바른 POST 요청이 맞는지 검증
     if request.method != 'POST':
         return HttpResponse('Wrong request.')
 
