@@ -64,10 +64,17 @@ and change the name back to its original name, settings.py.
 
 You can specify 3 string variables as follows. It is absolutely necessary to operate chatbot.
 
+만약 일부 토큰이 없으면, 빈 문자열(`''`)로 놔두셔도 좋으나
+해당 토큰을 사용하는 URL은 비활성화 하는 것을 권장합니다.
+
+If you don't have some tokens, you can leave them as an empty string (`''`),
+but I recommend disabling URLs that use them.
+
 ```
-PAGE_ACCESS_TOKEN = Own Facebook Page Access Token
-VERIFY_TOKEN = Verification Token for Callback URL
-ACCESS_USER_AGENT = Verification User Agent for KakaoTalk Chatbot
+PAGE_ACCESS_TOKEN = (Own Facebook Page Access Token)
+VERIFY_TOKEN = (Verification Token for Callback URL)
+ACCESS_USER_AGENT = (Verification User Agent for KakaoTalk Chatbot)
+API_KEY = (Google Maps API Key)
 ```
 
 ## 설치 과정 (Installation Process)

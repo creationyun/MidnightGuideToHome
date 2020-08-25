@@ -4,8 +4,12 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import urllib
+import requests
 from static_lib import *
+# tokens.py는 보안상 github에 업로드하지 않았다.
+from tokens import API_KEY
 
+# API 버전
 ver = "2.0"
 
 #################***************** 경로 찾기 *****************#################
@@ -42,14 +46,32 @@ def kakaoi_findpath(request):
             }
         })
 
-    # 구글 지도 URL 파라미터
+    # 구글 지도 API 파라미터
+    google_maps_url = 'https://maps.googleapis.com/maps/api/directions/json'
     google_maps_param = {
-        # api=1&origin={}&destination={}&travelmode=transit
-        "api": "1",
         "origin": req_origin,
         "destination": req_dest,
-        "travelmode": "transit"
+        "language": "ko",
+        "region": "kr",
+        "mode": "transit",
+        "key": API_KEY
     }
+    
+    # 구글 지도 API (GET) 요청 및 JSON Parsing
+    r = requests.get(url=google_maps_url, params=google_maps_param)
+    google_maps_json = r.json()
+    text = ''
+    
+    # 모든 route와 leg, step에 대해 경로 추출
+    for route in google_maps_json["routes"]:
+        for leg in route["legs"]:
+            for step in leg["steps"]:
+                if step["travel_mode"] == "WALKING":
+                    # 도보
+                    text += step["html_instructions"] + '\n'
+                elif step["travel_mode"] == "TRANSIT":
+                    # 대중교통
+                    text += step["transit_details"]["line"]["short_name"] + step["html_instructions"] + '\n'
 
     # format에 맞춰서 JSON response를 보냄.
     return JsonResponse({
@@ -58,9 +80,10 @@ def kakaoi_findpath(request):
             "outputs": [
                 {
                     "simpleText": {
-                        "text": MidnightGuideResultKakao.format(
-                            req_origin, req_dest, req_time,
-                            urllib.parse.urlencode(google_maps_param))
+                        "text": text
+                        # "text": MidnightGuideResultKakao.format(
+                        #     req_origin, req_dest, req_time,
+                        #     urllib.parse.urlencode(google_maps_param))
                     }
                 }
             ]
