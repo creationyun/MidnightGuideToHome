@@ -64,10 +64,17 @@ and change the name back to its original name, settings.py.
 
 You can specify 3 string variables as follows. It is absolutely necessary to operate chatbot.
 
+만약 일부 토큰이 없으면, 빈 문자열(`''`)로 놔두셔도 좋으나
+해당 토큰을 사용하는 URL은 비활성화 하는 것을 권장합니다.
+
+If you don't have some tokens, you can leave them as an empty string (`''`),
+but I recommend disabling URLs that use them.
+
 ```
-PAGE_ACCESS_TOKEN = Own Facebook Page Access Token
-VERIFY_TOKEN = Verification Token for Callback URL
-ACCESS_USER_AGENT = Verification User Agent for KakaoTalk Chatbot
+PAGE_ACCESS_TOKEN = (Own Facebook Page Access Token)
+VERIFY_TOKEN = (Verification Token for Callback URL)
+ACCESS_USER_AGENT = (Verification User Agent for KakaoTalk Chatbot)
+API_KEY = (Google Maps API Key)
 ```
 
 ## 설치 과정 (Installation Process)
@@ -124,7 +131,7 @@ $ sudo nano MidnightGuideToHome_uwsgi.ini
 ```
 [uwsgi]
 project = MidnightGuideToHome
-base = /home/user
+base = /home/<user>
 
 chdir = %(base)/%(project)
 home = %(base)/venv
@@ -138,7 +145,7 @@ chmod-socket = 666
 vacuum = true
 ```
 
-(base: MidnightGuideToHome이 있는 위치.
+(base: MidnightGuideToHome이 있는 위치. (/home/\<user\>로 표시)
 /home/ubuntu 형태인 경우가 많다.)
 
 (base: location with MidnightGuideToHome.
@@ -156,7 +163,7 @@ $ sudo nano uwsgi.service
 Description=uWSGI Emperor service
 
 [Service]
-ExecStart=/usr/local/bin/uwsgi --emperor /etc/uwsgi/sites
+ExecStart=/usr/local/bin/uwsgi --emperor /etc/uwsgi/sites --uid <user>
 Restart=on-failure
 KillSignal=SIGQUIT
 Type=notify
@@ -180,12 +187,12 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        root /home/user/MidnightGuideToHome;
+        root /home/<user>/MidnightGuideToHome;
     }
 
     location / {
         include         uwsgi_params;
-        uwsgi_pass      unix:/home/user/MidnightGuideToHome/MidnightGuideToHome.sock;
+        uwsgi_pass      unix:/home/<user>/MidnightGuideToHome/MidnightGuideToHome.sock;
     }
 }
 ```
@@ -197,31 +204,27 @@ $ sudo ln -s /etc/nginx/sites-available/MidnightGuideToHome /etc/nginx/sites-ena
 $ sudo nginx -t
 ```
 
-### 11. mongoDB, Djongo, requests를 설치합니다.
-### Install mongoDB, Djongo, and requests.
-```
-$ sudo apt install mongodb
-$ cd /home/user
-$ source venv/bin/activate
-(venv) $ pip3 install djongo
-(venv) $ pip3 install requests
-```
-(Djongo: Django의 mongoDB 연결을 수행함)
-
-(Djongo: connecting to mongoDB in Django)
-
-### 12. mongoDB 서비스를 구동하고 Django의 migration을 수행합니다.
-### Start the mongoDB service, and run migration of Django.
+### 11. Django의 migration을 수행합니다.
+### Run migration of Django.
 
 settings.py 파일을 수정하고(비밀 키 추가), tokens.py 파일을 만든 다음에...
 
 Modify settings.py (add secret key), make tokens.py file and...
 
+아래 명령어를 실행해주세요.
+
+Please run commands below.
+
 ```
-(venv) $ sudo systemctl start mongodb
+(venv) $ sudo systemctl restart nginx
+(venv) $ sudo systemctl enable uwsgi
+(venv) $ sudo systemctl start uwsgi
 (venv) $ cd MidnightGuideToHome
 (venv) $ ./manage.py migrate
 ```
+
+### 서버 실행하기 전,
+### Before running the server,
 
 비밀 키와 호스트를 MidnightGuideToHome/MidnightGuideToHome/settings.py의
 ALLOWED_HOSTS에 추가해주세요.

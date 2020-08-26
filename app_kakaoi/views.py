@@ -4,14 +4,18 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import urllib
-from static_lib import *
+import requests
+from static_lib import MidnightGuideResultKakao
+# tokens.py는 보안상 github에 업로드하지 않았다.
+from tokens import API_KEY
 
+# API 버전
 ver = "2.0"
 
 #################***************** 경로 찾기 *****************#################
 @csrf_exempt
 def kakaoi_findpath(request):
-	# 올바른 POST 요청이 맞는지 검증
+    # 올바른 POST 요청이 맞는지 검증
     if request.method != 'POST':
         return HttpResponse('Wrong request.')
 
@@ -42,9 +46,38 @@ def kakaoi_findpath(request):
             }
         })
 
-    # 구글 지도 URL 파라미터
+    # 구글 지도 API 파라미터
+    maps_api_url = 'https://maps.googleapis.com/maps/api/directions/json'
+    maps_api_param = {
+        "origin": req_origin,
+        "destination": req_dest,
+        "language": "ko",
+        "region": "kr",
+        "mode": "transit",
+        "key": API_KEY
+    }
+    
+    # 구글 지도 API (GET) 요청 및 JSON Parsing
+    r = requests.get(url=maps_api_url, params=maps_api_param)
+    google_maps_json = r.json()
+    text = ''
+    
+    # 모든 route와 leg, step에 대해 경로 추출
+    for route in google_maps_json["routes"]:
+        for leg in route["legs"]:
+            for step in leg["steps"]:
+                if step["travel_mode"] == "WALKING":
+                    # 도보
+                    text += step["html_instructions"] + '\n'
+                elif step["travel_mode"] == "TRANSIT":
+                    # 대중교통
+                    text += '{}, {}\n'.format(
+                        step["transit_details"]["line"]["short_name"],
+                        step["html_instructions"]
+                    )
+
+    # 구글 지도 URL 파라미터 (non-API)
     google_maps_param = {
-        # api=1&origin={}&destination={}&travelmode=transit
         "api": "1",
         "origin": req_origin,
         "destination": req_dest,
@@ -59,8 +92,9 @@ def kakaoi_findpath(request):
                 {
                     "simpleText": {
                         "text": MidnightGuideResultKakao.format(
-                            req_origin, req_dest, req_time,
-                            urllib.parse.urlencode(google_maps_param))
+                            req_origin, req_dest, req_time, text,
+                            urllib.parse.urlencode(google_maps_param)
+                        )
                     }
                 }
             ]
