@@ -272,7 +272,12 @@ MidnightGuideResultKakao = \
 
 자세한 내용은
 아래 구글 지도 링크를
-참고해주시기 바랍니다.
+참고해주시기 바라며,
+
+문의사항이 있을 경우
+하단메뉴 '상담직원 연결'
+부탁드립니다.
+
 https://www.google.com/maps/dir/?{4}'''
 
 MidnightServiceKakao = \
