@@ -7,10 +7,9 @@ Midnight Guide To Home Service chatbot software is a free software.
 (Used GPLv3, see LICENSE file.)
 
 ## app
-카카오톡 플러스친구와 웹 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
+웹 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
 
-Django app is collected functions required to operate the
-KakaoTalk Plusfriend and web services.
+Django app is collected functions required to operate the web services.
 
 ## app_fb
 페이스북 챗봇 서비스를 운영하는데 필요한 기능들을 모은 장고 앱입니다.
@@ -72,8 +71,7 @@ but I recommend disabling URLs that use them.
 
 ```
 PAGE_ACCESS_TOKEN = (Own Facebook Page Access Token)
-VERIFY_TOKEN = (Verification Token for Callback URL)
-ACCESS_USER_AGENT = (Verification User Agent for KakaoTalk Chatbot)
+VERIFY_TOKEN = (Facebook Verification Token for Callback URL)
 API_KEY = (Google Maps API Key)
 ```
 

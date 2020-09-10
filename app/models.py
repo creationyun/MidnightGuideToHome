@@ -1,15 +1,6 @@
 from django.db import models
 
 ############################## 모    델 ################################
-# KakaoService
-###############################
-# user: 카카오톡 사용자 ID (hashed)
-# created_time: DB 초기화 후 플러스친구 서비스 처음 사용 날짜와 시간
-# updated_time: 플러스친구 서비스 마지막 사용 날짜와 시간
-# dhcp_status: (사용안함)
-# nightbus_status: 서울 심야버스 알아보기 메뉴 on/off 상태
-# paidtoilet_status: 지하철 운임구역 화장실 알아보기 메뉴 on/off 상태
-#########################################
 # WebGuideRequests
 ###############################
 # user: 이름
@@ -26,14 +17,6 @@ from django.db import models
 #########################################
 
 # Create your models here.
-class KakaoService(models.Model):
-    user = models.CharField(max_length=100, primary_key=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    updated_time = models.DateTimeField(auto_now=True)
-    # dhcp_status = models.BooleanField(default=False)
-    nightbus_status = models.BooleanField(default=False)
-    paidtoilet_status = models.BooleanField(default=False)
-
 class WebGuideRequests(models.Model):
     user = models.CharField(max_length=100)
     request_time = models.DateTimeField(auto_now_add=True)
