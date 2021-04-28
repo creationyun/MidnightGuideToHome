@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <link rel="icon" href="/static/favicon.ico">
 
-  <title> 자정시간 귀가안내 서비스 </title>
+  <title> 대중교통 막차 포털 </title>
 
   <link rel="stylesheet" href="/static/web_service/css/bootstrap.min.css">
   <!--[if lt IE 9]>
@@ -21,29 +21,34 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/web">자정시간 귀가안내 서비스</a>
+    <a class="navbar-brand" href="{% url 'web_index' %}">대중교통 막차 포털</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/web">홈 <span class="sr-only">(current)</span></a>
+        {% url 'web_index' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">홈 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/web/guide_request">요청하기</a>
+        {% url 'web_guide_request' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">막차 요청하기</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown {% if 'request_view/' in request.path %}active{% endif %}">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            요청 목록
+            막차 요청 목록
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/web/request_view/process">진행 중인 요청</a>
-            <a class="dropdown-item" href="/web/request_view/complete">완료된 요청</a>
+            <a class="dropdown-item" href="{% url 'web_request_view' condition='process' %}">진행 중인 요청</a>
+            <a class="dropdown-item" href="{% url 'web_request_view' condition='complete' %}">완료된 요청</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/web/request_view/all">모든 요청</a>
+            <a class="dropdown-item" href="{% url 'web_request_view' condition='all' %}">모든 요청</a>
           </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.midnightguidetohome.info/timetable/">수도권 지하철 환승 시간표</a>
         </li>
       </ul>
     </div>
