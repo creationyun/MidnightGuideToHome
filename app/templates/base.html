@@ -50,6 +50,10 @@
         <li class="nav-item">
           <a class="nav-link" href="https://www.midnightguidetohome.info/timetable/">수도권 지하철 환승 시간표</a>
         </li>
+        {% url 'web_pub_trans_routes_comparisons' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">대중교통 경로의 장단점 비교</a>
+        </li>
       </ul>
     </div>
   </nav>

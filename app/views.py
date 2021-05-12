@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
-# from django.template import loader
-from .models import WebGuideRequests, WebGuideReplies
+from .models import WebGuideRequests, WebGuideReplies, WebPubTransRoutesComparisons
 
 
 #################***************** 첫 페이지 *****************#################
 def web_index(request):
     return render(request, 'web/index.html', {})
+
 
 ###############***************** 요청 뷰 페이지 *****************###############
 def web_request_view(request, condition):
@@ -23,6 +23,7 @@ def web_request_view(request, condition):
         raise Http404("404 Not Found. %s is not available" % condition)
 
     return render(request, 'web/request_view.html', {'requests': guideRequests})
+
 
 ###############************** 요청 detail 페이지 **************###############
 def web_request_detail(request, req_id):
@@ -44,6 +45,7 @@ def web_request_detail(request, req_id):
     return render(request, 'web/request_detail.html', {
         'req': guideRequest, 'rep': reply, 'reply_notfound': replyNotFound
     })
+
 
 #################***************** 요청 페이지 *****************#################
 def web_guide_request(request):
@@ -88,3 +90,9 @@ def web_guide_request(request):
 
     # 페이지 렌더링
     return render(request, 'web/guide_request.html', content)
+
+
+#################***** 대중교통 경로의 장단점 비교 페이지 *****#################
+def web_pub_trans_routes_comparisons(request):
+    all_objs = WebPubTransRoutesComparisons.objects.all()
+    return render(request, 'web/pub_trans_routes_comparisons.html', {'posts': all_objs})

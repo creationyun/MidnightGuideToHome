@@ -1,5 +1,6 @@
 from django.db import models
 
+
 ############################## 모    델 ################################
 # WebGuideRequests
 ###############################
@@ -24,7 +25,14 @@ class WebGuideRequests(models.Model):
     destination = models.CharField(max_length=100)
     finished = models.BooleanField(default=False)
 
+
 class WebGuideReplies(models.Model):
     reply_time = models.DateTimeField(auto_now_add=True)
     request_id = models.IntegerField()
     reply_content = models.TextField(blank=True)
+
+
+class WebPubTransRoutesComparisons(models.Model):
+    num = models.BigIntegerField(primary_key=True)
+    route = models.CharField(max_length=100)
+    url = models.CharField(max_length=200)
