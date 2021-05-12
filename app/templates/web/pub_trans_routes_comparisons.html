@@ -3,18 +3,19 @@
 {% block content %}
   <div class="container-fluid table-responsive">
     <h2> 대중교통 경로의 장단점 비교 목록 </h2>
+    <p> 선택하시면 해당 게시글로 이동됩니다. </p>
     <table class="table table-hover">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">제목</th>
+          <th scope="col">경로</th>
         </tr>
       </thead>
       <tbody>
         {% for p in posts %}
         <tr onclick="window.location='{{ p.url }}';">
           <th scope="row">{{ p.num }}</th>
-          <td>대중교통 경로의 장단점 비교 {{ p.num }} - {{ p.route }}</td>
+          <td>{{ p.route }}</td>
         </tr>
         {% endfor %}
       </tbody>

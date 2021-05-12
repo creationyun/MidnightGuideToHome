@@ -85,6 +85,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MidnightGuideToHome.wsgi.application'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'  # For django 3.2 version
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
