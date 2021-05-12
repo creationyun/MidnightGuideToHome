@@ -33,6 +33,6 @@ class WebGuideReplies(models.Model):
 
 
 class WebPubTransRoutesComparisons(models.Model):
-    num = models.BigIntegerField(primary_key=True)
+    num = models.BigAutoField(primary_key=True)
     route = models.CharField(max_length=100)
     url = models.CharField(max_length=200)
