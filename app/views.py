@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
-from .models import WebGuideRequests, WebGuideReplies, WebPubTransRoutesComparisons
+from .models import WebGuideRequests, WebGuideReplies, WebPubTransRoutesComparisons, WebBusTimetable
 
 
 #################***************** 첫 페이지 *****************#################
@@ -94,5 +94,21 @@ def web_guide_request(request):
 
 #################***** 대중교통 경로의 장단점 비교 페이지 *****#################
 def web_pub_trans_routes_comparisons(request):
-    all_objs = WebPubTransRoutesComparisons.objects.all()
-    return render(request, 'web/pub_trans_routes_comparisons.html', {'posts': all_objs})
+    all_posts = WebPubTransRoutesComparisons.objects.all()
+    return render(request, 'web/pub_trans_routes_comparisons.html', {'posts': all_posts})
+
+
+#################***** 버스 시간표 페이지 *****#################
+def web_bus_timetable_view(request, category):
+    buses = WebBusTimetable.objects.filter(category=category)
+    return render(request, 'web/bus_timetable_view.html', {'buses': buses})
+
+
+#################***** 버스 시간표 detail 페이지 *****#################
+def web_bus_timetable_detail(request, bus_id):
+    try:
+        bus = WebBusTimetable.objects.get(id=bus_id)
+    except ObjectDoesNotExist:
+        raise Http404("404 Not Found. Cannot find this id...")
+
+    return render(request, 'web/bus_timetable_detail.html', {'bus': bus})

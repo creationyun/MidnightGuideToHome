@@ -28,32 +28,49 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+
         {% url 'web_index' as url %}
         <li class="nav-item {% if request.path == url %}active{% endif %}">
           <a class="nav-link" href="{{ url }}">홈 <span class="sr-only">(current)</span></a>
         </li>
+
         {% url 'web_guide_request' as url %}
         <li class="nav-item {% if request.path == url %}active{% endif %}">
           <a class="nav-link" href="{{ url }}">막차 요청하기</a>
         </li>
+
         <li class="nav-item dropdown {% if 'request_view/' in request.path %}active{% endif %}">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLast" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             막차 요청 목록
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownLast">
             <a class="dropdown-item" href="{% url 'web_request_view' condition='process' %}">진행 중인 요청</a>
             <a class="dropdown-item" href="{% url 'web_request_view' condition='complete' %}">완료된 요청</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'web_request_view' condition='all' %}">모든 요청</a>
           </div>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="https://www.midnightguidetohome.info/timetable/">수도권 지하철 환승 시간표</a>
         </li>
+
         {% url 'web_pub_trans_routes_comparisons' as url %}
         <li class="nav-item {% if request.path == url %}active{% endif %}">
           <a class="nav-link" href="{{ url }}">대중교통 경로의 장단점 비교</a>
         </li>
+
+        <li class="nav-item dropdown {% if 'bus_timetable_view/' in request.path %}active{% endif %}">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBusTimetable" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            버스 시간표
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownBusTimetable">
+            <a class="dropdown-item" href="{% url 'web_bus_timetable_view' category='seoul' %}">서울</a>
+            <a class="dropdown-item" href="{% url 'web_bus_timetable_view' category='gyeonggido' %}">경기도</a>
+            <a class="dropdown-item" href="{% url 'web_bus_timetable_view' category='incheon' %}">인천</a>
+          </div>
+        </li>
+
       </ul>
     </div>
   </nav>
