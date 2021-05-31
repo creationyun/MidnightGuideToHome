@@ -6,12 +6,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import WebGuideRequests, WebGuideReplies, WebPubTransRoutesComparisons, WebBusTimetable
 
 
-#################***************** 첫 페이지 *****************#################
+# 첫 페이지
 def web_index(request):
     return render(request, 'web/index.html', {})
 
 
-###############***************** 요청 뷰 페이지 *****************###############
+# 요청 뷰 페이지
 def web_request_view(request, condition):
     if condition == 'all':  # 모든 요청
         guideRequests = WebGuideRequests.objects.all()
@@ -25,7 +25,7 @@ def web_request_view(request, condition):
     return render(request, 'web/request_view.html', {'requests': guideRequests})
 
 
-###############************** 요청 detail 페이지 **************###############
+# 요청 detail 페이지
 def web_request_detail(request, req_id):
     # 해당 id에 맞는 요청 객체 불러오기
     try:
@@ -47,7 +47,7 @@ def web_request_detail(request, req_id):
     })
 
 
-#################***************** 요청 페이지 *****************#################
+# 요청 페이지
 def web_guide_request(request):
     content = {}
 
@@ -92,19 +92,19 @@ def web_guide_request(request):
     return render(request, 'web/guide_request.html', content)
 
 
-#################***** 대중교통 경로의 장단점 비교 페이지 *****#################
+# 대중교통 경로의 장단점 비교 페이지
 def web_pub_trans_routes_comparisons(request):
     all_posts = WebPubTransRoutesComparisons.objects.all()
     return render(request, 'web/pub_trans_routes_comparisons.html', {'posts': all_posts})
 
 
-#################***** 버스 시간표 페이지 *****#################
+# 버스 시간표 페이지
 def web_bus_timetable_view(request, category):
     buses = WebBusTimetable.objects.filter(category=category)
     return render(request, 'web/bus_timetable_view.html', {'buses': buses})
 
 
-#################***** 버스 시간표 detail 페이지 *****#################
+# 버스 시간표 detail 페이지
 def web_bus_timetable_detail(request, bus_id):
     try:
         bus = WebBusTimetable.objects.get(id=bus_id)

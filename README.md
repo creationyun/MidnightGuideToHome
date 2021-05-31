@@ -42,8 +42,7 @@ of the admin page, etc.
 It contains images used by Midnight Guide To Home requests.
 
 ## 필요한 구성요소 (Required Components)
-Linux (Ubuntu, Debian, etc.), Python 3.6 or more, Django 2.1, uWSGI, nginx,
-MongoDB (+pymongo, djongo)
+Linux (Ubuntu, Debian, etc.), Python 3.7 or more, Django 3.2, uWSGI, nginx
 
 settings.py 파일을 수정한 후에, 다른 데이터베이스 모듈을 사용할 수도 있습니다.
 
