@@ -27,14 +27,11 @@
           <td>{{ bus.update_date }}</td>
         </tr>
         <tr>
-          <th scope="row" colspan="2">시간표 이미지</th>
+          <th scope="row">시간표 이미지</th>
+          <td><a href="{{ bus.post_url }}">원본 게시글 바로가기</a></td>
         </tr>
         <tr>
           <td colspan="2"><img src="{{ bus.img_url }}" width="100%"></td>
-        </tr>
-        <tr>
-          <th scope="row">시간표 링크</th>
-          <td><a href="{{ bus.post_url }}">{{ bus.post_url }}</a></td>
         </tr>
       </tbody>
     </table>
